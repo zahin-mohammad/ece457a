@@ -1,0 +1,68 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{biblatex}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{marginnote}
+\usepackage{hyperref}
+
+
+\addbibresource{bib.bib}
+\setlength{\parindent}{0em}
+\bibliography{bib}
+
+
+\title{Week 2 Part 2}
+\author{Zahin Mohammad}
+\date{May 2020}
+\linespread{1.5}
+\begin{document}
+
+\maketitle
+% \setlength{\parskip}{6pt}
+\section{Uniformed Search}
+\subsection{Breadth First Search}
+
+State is represented in a queue.
+General search steps:
+\begin{itemize}
+    \item Visit all level x node's in the queue,and expand the node (add children to the queue)
+    \item Once all level x nodes have been visited, repeat
+    \item FIFO
+\end{itemize}
+BFS is optimal if the depth of the tree is a reflection of cost (a 4 cost goal will be at level 4). BFS finds the shallowest goal state.
+\setlength{\parskip}{6pt}
+
+Uniform cost search expands only the lowest cost node on the fringe. This remedies issue where BFS does not retrieve optimal solution when depth is not proportional to cost.Queue is ordered from least to highest cost (dijkstra).
+
+\subsection{Depth First Search}
+
+\begin{itemize}
+    \item Go down own track (left) until you process leaf node
+    \item Go down second track (right) and repeat 
+    % \item FIFO
+\end{itemize}
+
+Properties:
+\begin{itemize}
+\item If depth of tree is finite, problem is complete
+\item Not optimal (goal node in right sub-tree only looked at after entire left sub-tree is done)
+\item Time: O($b^m$) where b is the maximum branching factor of the tree and m is the maximum height of the tree
+\item Space: O(bm), the size of the deepest stack
+\end{itemize}
+
+Depth limited search will limit the depth in search. Once the depth limit is reached, the traversal will go back up the tree. 
+
+Properties:
+\begin{itemize}
+    \item Complete if depth of solution is lower than depth-limit ($d \leq l$)
+    \item Not optimal
+    \item Always terminates
+    \item Time: O($b^l$)
+    \item Space: O($bl$)
+\end{itemize}
+If $l>>d$, depth-limited search may be slower then breadth-first search.
+\printbibliography[title={Referências}]
+\end{document}
+
+\end{document}
