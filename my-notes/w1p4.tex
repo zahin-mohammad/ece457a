@@ -23,7 +23,7 @@
 \section{Solution Strategies for Ill-Structured Problems}
     Optimization Problem: Find the best solution from feasible solutions subject to constraints.
 
-    Optimization Algorithims:
+    Optimization Algorithms:
     \begin{itemize}
         \item Exact Algos:
         \item  \begin{itemize}
@@ -38,13 +38,13 @@
     \end{itemize}
 
 \section{Optimization Methods}
-\subsection{Approximate Algorithims}
+\subsection{Approximate Algorithms}
     Heuristics:
     \begin{itemize}
-        \item Procudes acceptable solutions to complex problems in a practical time
+        \item Produces acceptable solutions to complex problems in a practical time
         \item Aim is to efficiently generate good solutions
-        \item Does not guarentee optimality
-        \item Characterisitics:
+        \item Does not guarantee optimality
+        \item Characteristics:
         \item \begin{itemize}
             \item Short run times
             \item Easy to implement
@@ -63,12 +63,12 @@
         \item Start from initial solution
         \item Iteratively try and replace current solution with a better one
     \end{itemize}
-\subsection{Local Search Methds: In depth}
-    Search: mve from state-to-state in the problam space to fina a goal or terminate if not found.
+\subsection{Local Search Methods: In depth}
+    Search: move from state-to-state in the problem space to find a goal or terminate if not found.
 
     Goal Based Search:
     \begin{itemize}
-        \item Use information about enviroment and current state to reach an end goal
+        \item Use information about environment and current state to reach an end goal
         \item Goal can be sub-optimal
         \item Find a path from A to B
     \end{itemize}
@@ -90,29 +90,29 @@
         \item What aspects can be ignored?
     \end{itemize}
 
-    Properties of Search Algorithims:
+    Properties of Search Algorithms:
     \begin{itemize}
-        \item Completeness: Are we gaurenteed to find a goal node if it exists
-        \item Optimality Are we gaurenteed to find the best goal node
+        \item Completeness: Are we guaranteed to find a goal node if it exists
+        \item Optimality Are we guaranteed to find the best goal node
         \item Time Complexity: How many nodes are generated
-        \item Space Complexity: HMax number of nodes stored in memory
+        \item Space Complexity: Max number of nodes stored in memory
     \end{itemize}
 
     Problem Formulation:
     \begin{itemize}
         \item Decide how to manipulate important aspects
         \item Done after goal formulation
-        \item Compact represenation of problem space
+        \item Compact representation of problem space
         \item Represent the search space by states 
         \item Need valid actions for a given state:
         \begin{itemize}
             \item Define action the agent can perform and their cost
             \item Transition model (what decides the state-state transitions; why would the agent want to go to the new state)
-            \item Neigbor of a state are states the agent can transition too
+            \item Neighbor of a state are states the agent can transition too
         \end{itemize}
         \item Well Defined state-space formulation:
         \begin{itemize}
-            \item State Space: Complete / partial represenation of a problem 
+            \item State Space: Complete / partial representation of a problem 
             \item Initial State: Starting point
             \item Goal State: Search termination state
             \item Set of Actions: Allows movement between Strategies
@@ -122,13 +122,15 @@
 
     Define the Solution:
     \begin{itemize}
-        \item A sequence of actions that will transform the enviroment from one state to another to reach the goal
+        \item A sequence of actions that will transform the environment from one state to another to reach the goal
     \end{itemize}
 
-    Closed world: Each state is a complete discription of the world.
-    Enviroment is:
+    Closed world: Each state is a complete description of the world.
+    \setlength{\parskip}{6pt}
+    
+    Environment is:
     \begin{itemize}
-        \item Full observable (can measure enviroment after an action)
+        \item Full observable (can measure environment after an action)
         \item Deterministic (action will product same results)
         \item Sequential
         \item Static
@@ -137,8 +139,8 @@
 
     Template of Generic Search:
     \begin{itemize}
-        \item Choose, Test, Expand and represenation
-        \item Search algo's differ in how next state is chosen (greedy, heurisitc, etc)
+        \item Choose, Test, Expand and representation
+        \item Search algo's differ in how next state is chosen (greedy, heuristic, etc)
         \item Generally queue used to store fringe nodes
     \end{itemize}
 
