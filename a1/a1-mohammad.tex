@@ -1,0 +1,71 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{biblatex}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{marginnote}
+\usepackage{hyperref}
+
+
+\addbibresource{bib.bib}
+\setlength{\parindent}{0em}
+\bibliography{bib}
+
+
+\title{Assignment 1}
+\author{Zahin Mohammad}
+\date{June 2020}
+\linespread{1.5}
+\begin{document}
+
+\maketitle
+% \setlength{\parskip}{6pt}
+\section{Question 1}
+For the given problem, a state will be represented as a $tuple$, where the first element represents the amount of water in the 4 gallon jug, and the second element represents the amount of water in the 3 gallon jug. 
+\setlength{\parskip}{6pt}
+
+The initial state will be represented as $(0,0)$, indicating an empty 4 gallon jug and an empty 3 gallon jug. 
+\setlength{\parskip}{6pt}
+
+The goal state will be represented as $(_,2)$ indicating that the 3 gallon jug has 2 gallons of water, and the 4 gallon jug has anywhere from 0-4 gallons of water.
+
+At any state, the given actions are:
+\begin{itemize}
+    \item Pour water from the 4 gallon jug to the 3 gallon jug 
+    \item Pour water from the 3 gallon jug to the 4 gallon jug
+    \item Pour water from the 4 gallon jug to the ground
+    \item Pour water from the 3 gallon jug to the ground
+    \item Fill the 4 gallon jug with 4 gallons of water via the pump
+    \item Fill the 3 gallon jug with 3 gallons of water via the pump
+\end{itemize}
+
+The condition for the actions is as follows:
+\begin{itemize}
+    \item If jug $x$ is pouring water into jug $y$ then the water in jug $x>0$
+    \item If jug $x$ is getting filled with water via the pump, then the water in jug $x < \mbox{max capacity of jug } x$
+\end{itemize}
+
+\section{Question 2}
+For the given problem, a state will be represented as 3 $arrays$, one per pole. The items in the array represent discs on a pole, with element $0$ being the base of the pole (largest diameter), and the end of the array being the top most disc on the pole (smallest diameter). The discs are represented as their numeric diameter.
+\setlength{\parskip}{6pt}
+
+The initial state will be represented as $[x, y, z ...], [], []$ indicating that the first pole has all the discs in descending order, and the other two poles are empty. Here $x,y,z$ represent arbitrary disc diameters where the diameters follow as $x>y>z$.
+\setlength{\parskip}{6pt}
+
+The goal state will be represented as $[], [x,y,z], []$ or $[], [], [x,y,z]$ indicating that the first pole has no discs, and either the second or third pole has all the discs in descending order of disc diameter.
+
+At any state, the given actions are:
+\begin{itemize}
+    \item Move a disc from pole $a$ to pole $b$ where $a!=b$
+\end{itemize}
+
+The condition for the actions is as follows:
+\begin{itemize}
+    \item If a disc is being moved from pole $a$ to pole $b$, then there must exist at least 1 disc in pole $a$
+    \item If a disc is being moved from pole $a$ to pole $b$ and $b$ is not empty, then the disc at the top of pole $b$ must be less than the disc at the top of pole $a$
+\end{itemize}
+
+\section{Question 3}
+\end{document}
+
+
