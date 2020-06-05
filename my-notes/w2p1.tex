@@ -1,0 +1,55 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{biblatex}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{marginnote}
+\usepackage{hyperref}
+
+
+\addbibresource{bib.bib}
+\setlength{\parindent}{0em}
+\bibliography{bib}
+
+
+\title{Week 2 Part 1}
+\author{Zahin Mohammad}
+\date{May 2020}
+\linespread{1.5}
+\begin{document}
+
+\maketitle
+% \setlength{\parskip}{6pt}
+\section{Tree Terminology}
+    Nodes are states, and edges are actions.Expanding a node is expanding it's children. The fringe is the set of all nodes at the end of all visited paths (also called frontier or border). Branching factor is the number of children a node can have.
+    
+    States are:
+    \begin{itemize}
+        \item Explored
+        \item At the Frontier (nodes next in line to be explored)
+        \item Unexplored
+    \end{itemize}
+    
+    Complete search strategies will find a solution if it exists in a finite amount of time. An optimal algorithm will find the solution (if it exists) with the lowest cost.
+
+    Typical definitions:
+    \begin{itemize}
+        \item b: maximum branching factor
+        \item d depth of the shallowest goal node
+        \item m: maximum path length (height)
+    \end{itemize}
+
+\section{Local Search Types}
+    
+    General algorithm for search:
+    \begin{itemize}
+        \item chose, test and expand state
+        \item Queue used to store fringes to-be expanded
+    \end{itemize}
+
+    Local searches are either uniformed or informed. Uniformed search (blind search) have no information on likely location of goal. Informed search (heuristic search) uses domain information to head to general direction of goal node.
+\subsection{Uniformed}
+
+\end{document}
+
+\end{document}
