@@ -6,6 +6,11 @@
 \usepackage{marginnote}
 \usepackage{hyperref}
 
+\usepackage{booktabs, multirow} % for borders and merged ranges
+\usepackage{soul}% for underlines
+\usepackage[table]{xcolor} % for cell colors
+\usepackage{changepage,threeparttable} % for wide tables
+
 
 \addbibresource{bib.bib}
 \setlength{\parindent}{0em}
@@ -31,10 +36,10 @@ The goal state will be represented as $(_,2)$ indicating that the 3 gallon jug h
 
 At any state, the given actions are:
 \begin{itemize}
-    \item Pour water from the 4 gallon jug to the 3 gallon jug 
-    \item Pour water from the 3 gallon jug to the 4 gallon jug
-    \item Pour water from the 4 gallon jug to the ground
-    \item Pour water from the 3 gallon jug to the ground
+    \item Pour all water from the 4 gallon jug to the 3 gallon jug 
+    \item Pour all water from the 3 gallon jug to the 4 gallon jug
+    \item Pour all water from the 4 gallon jug to the ground
+    \item Pour all water from the 3 gallon jug to the ground
     \item Fill the 4 gallon jug with 4 gallons of water via the pump
     \item Fill the 3 gallon jug with 3 gallons of water via the pump
 \end{itemize}
@@ -66,6 +71,176 @@ The condition for the actions is as follows:
 \end{itemize}
 
 \section{Question 3}
+\subsection{Breadth-First Search}
+    In Table \ref{tab:bfs3} the steps of the breadth first search algorithm are shown. The open-queue is a FIFO queue, with the next element being the left-most element in the array.
+    By step 10, we are processing the goal state $I$. This gives us a final path of
+    \begin{equation}
+        A \rightarrow E \rightarrow I,
+    \end{equation}
+    with a cost of $2$.
+    \begin{table}[!htp]\centering
+        \caption{Steps for BFS}\label{tab:bfs3}
+        \scriptsize
+        \begin{tabular}{lrrll}\toprule
+        Step &Current Node &Goal Node & Open Queue &Closed Queue  \\\midrule
+        1&  &I &[$A^0$] &[] \\
+        2& $A^0$ &I &[$B^1, D^1, E^1$] &[] \\
+        3& $B^1$ &I &[$D^1, E^1, G^2$] &[$A^0$] \\
+        4& $D^1$ &I &[$E^1, G^2, C^2, F^2$] &[$A^0, B^1$] \\
+        5& $E^1$ &I &[$G^2, C^2, F^2, H^2, I^2$] &[$A^0, B^1, D^1$] \\
+        6& $G^2$ &I &[$C^2, F^2, H^2, I^2$] &[$A^0, B^1, D^1, E^1$] \\
+        7& $C^2$ &I &[$F^2, H^2, I^2$] &[$A^0, B^1, D^1, E^1, G^2$] \\
+        8& $F^2$ &I &[$H^2, I^2$] & [$A^0, B^1, D^1, E^1, G^2, C^2$]\\
+        9& $H^2$ &I &[$I^2$] & [$A^0, B^1, D^1, E^1, G^2, C^2, F^2$]\\
+        10& $I^2$ &I &[] & [$A^0, B^1, D^1, E^1, G^2, C^2, F^2, H^2$]\\
+        \bottomrule
+        \end{tabular}
+    \end{table}
+
+\subsection{Depth-First Search}
+    In Table \ref{tab:dfs3} the steps of the depth first search algorithm are shown. The open-queue is a LIFO queue, with the next element being the left-most element in the array. 
+    By step 4, we are processing the goal state $I$. This gives us a final path of
+    \begin{equation}
+        A \rightarrow E \rightarrow I,
+    \end{equation}
+    with a cost of $2$.
+
+    \begin{table}[!htp]\centering
+        \caption{Steps for BFS}\label{tab:dfs3}
+        \scriptsize
+        \begin{tabular}{lrrll}\toprule
+        Step &Current Node &Goal Node & Open Queue &Closed Queue  \\\midrule
+        1&  &I &[$A^0$] &[] \\
+        2& $A^0$ &I &[$E^1, D^1, B^1$] &[] \\
+        3& $E^1$ &I &[$I^2, H^2, G^2, D^1, B^1$] &[$A^0$] \\
+        4& $I^2$ &I &[$H^2, G^2, D^1, B^1$] &[$A^0, E^1$] \\
+        \end{tabular}
+    \end{table}
+
+
+\section{Question 4}
+    NOTE: For this question, I assume that states can be repeated as it was not stated in the document.
+\subsection{Breadth-First Search}
+    In Table \ref{tab:bfs4} the steps of the breadth first search algorithm are shown. The open-queue is a FIFO queue, with the next element being the left-most element in the array.
+    By step 14, we are processing the goal state $G$. This gives us a final path of
+    \begin{equation}
+        S \rightarrow A  \rightarrow B \rightarrow H \rightarrow G,
+    \end{equation}
+    with a cost of $12$.
+
+    \begin{table}[!htp]\centering
+        \caption{Steps for BFS}\label{tab:bfs4}
+        \scriptsize
+        \begin{tabular}{lrrll}\toprule
+        Step &Node &Goal & Open Queue &Closed Queue  \\\midrule
+        1&  &G &[$S^0$] &[] \\
+        2& $S^0$ &G &[$A^3, D^4$] &[] \\
+        3& $A^3$ &G &[$D^4, B^7, D^8$] &[$S^0$] \\
+        4& $D^4$ &G &[$B^7, D^8, E^6$] &[$S^0, A^3$] \\
+        5& $B^7$ &G &[$D^8, E^6, C^{10}, H^{11}$] &[$S^0, A^3, D^3$] \\
+        6& $D^8$ &G &[$E^6, C^{10}, H^{11}, E^{10}$] &[$S^0, A^3, D^3, B^7$] \\
+        7& $E^6$ &G &[$C^{10}, H^{11}, E^{10}, B^{11}, C^{10}, F^{10}$] &[$S^0, A^3, D^3, B^7, D^{8}$] \\
+        8& $C^{10}$ &G &[$H^{11}, E^{10}, B^{11}, C^{10}, F^{10}$] &[$S^0, A^3, D^3, B^7, D^{8}, E^{6}$] \\
+        9& $H^{11}$ &G &[$E^{10}, B^{11}, C^{10}, F^{10}, G^{12}$] &[$S^0, A^3, D^3, B^7, D^{8}, E^{6}, C^{10}$] \\
+        10& $E^{10}$ &G &[$B^{11}, C^{10}, F^{10}, G^{12}, B^{15}, C^{14}, F^{14}$] &[$S^0, A^3, D^3, B^7, D^{8}, E^{6}, C^{10}, H^{11}$] \\
+        11& $B^{11}$ &G &[$C^{10}, F^{10}, G^{12}, B^{15}, C^{14}, F^{14}, C^{14}, H^{15}$] &[$S^0, A^3, D^3, B^7, D^{8}, E^{6}, C^{10}, H^{11}, E^{10}$] \\
+        12& $C^{10}$ &G &[$F^{10}, G^{12}, B^{15}, C^{14}, F^{14}, C^{14}, H^{15}$] &[$S^0, A^3, D^3, B^7, D^{8}, E^{6}, C^{10}, H^{11}, E^{10}, B^{11}$] \\
+        13& $F^{10}$ &G &[$G^{12}, B^{15}, C^{14}, F^{14}, C^{14}, H^{15}, H^{15}$] &[$S^0, A^3, D^3, B^7, D^{8}, E^{6}, C^{10}, H^{11}, E^{10}, B^{11}, C^{10}$] \\
+        14& $G^{12}$ &G &[$B^{15}, C^{14}, F^{14}, C^{14}, H^{15}, H^{15}$] &[$S^0, A^3, D^3, B^7, D^{8}, E^{6}, C^{10}, H^{11}, E^{10}, B^{11}, C^{10}, F^{10}$] \\
+        \bottomrule
+        \end{tabular}
+    \end{table}
+\subsection{Depth-First Search}
+    In Table \ref{tab:dfs4} the steps of the depth first search algorithm are shown. The open-queue is a LIFO queue, with the next element being the left-most element in the array. 
+    By step 7, we are processing the goal state $G$. This gives us a final path of
+    \begin{equation}
+        S \rightarrow D \rightarrow F \rightarrow H \rightarrow G,
+    \end{equation}
+    with a cost of $16$.
+
+    \begin{table}[!htp]\centering
+        \caption{Steps for BFS}\label{tab:dfs4}
+        \scriptsize
+        \begin{tabular}{lrrll}\toprule
+        Step &Current&Goal& Open Queue &Closed Queue  \\\midrule
+        1&  &G &[$S^0$] &[] \\
+        2& $S^0$ &G &[$D^4, A^3$] &[] \\
+        3& $D^4$ &G &[$E^6, A^3$] &[$S^0$] \\
+        4& $E^6$ &G &[$F^{10}, C^{10}, B^{11}, A^3$] &[$S^0, D^4$] \\
+        5& $F^{10}$ &G &[$H^{15},C^{10}, B^{11}, A^3$] &[$S^0, D^4, E^{6}$] \\
+        6& $H^{15}$ &G &[$G^{16},C^{10}, B^{11}, A^3$] &[$S^0, D^4, E^{6}, F^{10}$] \\
+        7& $G^{16}$ &G &[$C^{10}, B^{11}, A^3$] &[$S^0, D^4, E^{6}, F^{10}, H^{15}$] \\
+
+        \end{tabular}
+    \end{table}
+
+
+
+
+\subsection{Uniform Cost Search}
+
+    In Table \ref{tab:ucs4} the steps of the uniform cost search algorithm are shown. 
+    By step 13, we are processing the goal state $G$. This gives us a final path of
+    \begin{equation}
+        S \rightarrow A \rightarrow B \rightarrow H \rightarrow G,
+    \end{equation}
+    with a cost of $12$.
+
+    \begin{table}[!htp]\centering
+        \caption{Uniform Cost Search}\label{tab:ucs4}
+        \scriptsize
+        \begin{tabular}{lrrll}\toprule
+        Step &Current Node &Goal Node & Open Queue &Closed Queue  \\\midrule
+        1&  &G &[$S^0$] &[] \\
+        2& $S^0$ &G &[$A^3, D^4$] &[] \\
+        3& $A^3$ &G &[$D^4, B^7, D^8$] &[$S^0$] \\
+        4& $D^4$ &G &[$E^6, B^7, D^8$] &[$S^0, A^3$] \\
+        5& $E^6$ &G &[$B^7, D^8, C^{10}, F^{10}, B^{11},$] &[$S^0, A^3, D^4$] \\
+        6& $B^7$ &G &[$D^8, C^{10}, C^{10}, F^{10}, H^{11}, B^{11}$] &[$S^0, A^3, D^4, E^6$] \\
+        7& $D^8$ &G &[$C^{10}, C^{10}, E^{10}, F^{10}, H^{11}, B^{11}$] &[$S^0, A^3, D^4, E^6, B^7$] \\
+        8& $C^{10}$ &G &[$C^{10}, E^{10}, F^{10}, H^{11}, B^{11}$] &[$S^0, A^3, D^4, E^6, B^7, D^8$] \\
+        9& $C^{10}$ &G &[$E^{10}, F^{10}, H^{11}, B^{11}$] &[$S^0, A^3, D^4, E^6, B^7, D^8, C^{10}$] \\
+        10& $E^{10}$ &G &[$F^{10}, H^{11}, B^{11}, C^{14}, F^{14}, B^{15}$] &[$S^0, A^3, D^4, E^6, B^7, D^8, C^{10}, C^{10}$] \\
+        11& $F^{10}$ &G &[$H^{11}, B^{11}, C^{14}, F^{14}, B^{15}, H^{15}$] &[$S^0, A^3, D^4, E^6, B^7, D^8, C^{10}, C^{10}, E^{10}$] \\
+        12& $H^{11}$ &G &[$G^{12}, B^{11}, C^{14}, F^{14}, B^{15}, H^{15}$] &[$S^0, A^3, D^4, E^6, B^7, D^8, C^{10}, C^{10}, E^{10}, F^{10}$] \\
+        13& $G^{12}$ &G &[$G^{12}, B^{11}, C^{14}, F^{14}, B^{15}, H^{15}$] &[$S^0, A^3, D^4, E^6, B^7, D^8, C^{10}, C^{10}, E^{10}, F^{10}, H^{11}$] \\
+        \end{tabular}
+    \end{table}
+
+\section{Question 5}
+\subsection{Uniform Cost Search}
+
+    In Table \ref{tab:ucs5} the steps of the uniform cost search algorithm are shown. 
+    By step 11, we are processing the goal state $7$. This gives us a final path of
+    \begin{equation}
+        1 \rightarrow 8 \rightarrow 10 \rightarrow 9 \rightarrow 7,
+    \end{equation}
+    with a cost of $100$.
+
+    \begin{table}[!htp]\centering
+        \caption{Uniform Cost Search}\label{tab:ucs5}
+        \scriptsize
+        \begin{tabular}{lrrll}\toprule
+        Step &Current Node &Goal Node & Open Queue &Closed Queue  \\\midrule
+        1&  &G &[$1^{0}$] &[] \\
+        2& $1^{0}$ &7 &[$5^{5}, 8^{24}$] &[] \\
+        3& $5^{5}$ &7 &[$8^{24}, 6^{40}$] &[$1^{0}$] \\
+        4& $8^{24}$ &7 &[$10^{39}, 6^{40}, 3^{47} $] &[$1^{0}, 5^{5}$] \\
+        5& $10^{39}$ &7 &[$6^{40}, 3^{47}, 9^{65} $] &[$1^{0}, 5^{5}, 8^{24}$] \\
+        6& $6^{40}$ &7 &[$3^{47}, 9^{65}, 2^{78}$] &[$1^{0}, 5^{5}, 8^{24}, 10^{39}$] \\
+        7& $3^{47}$ &7 &[$4^{54}, 9^{65}, 2^{78}$] &[$1^{0}, 5^{5}, 8^{24}, 10^{39}, 6^{40}$] \\
+        8& $4^{54}$ &7 &[$9^{65}, 2^{78}$] &[$1^{0}, 5^{5}, 8^{24}, 10^{39}, 6^{40}, 3^{47}$] \\
+        9& $9^{65}$ &7 &[$2^{78}, 7^{100}$] &[$1^{0}, 5^{5}, 8^{24}, 10^{39}, 6^{40}, 3^{47}, 4^{54}$] \\
+        10& $2^{78}$ &7 &[$7^{100}$] &[$1^{0}, 5^{5}, 8^{24}, 10^{39}, 6^{40}, 3^{47}, 4^{54}, 9^{65}$] \\
+        11& $7^{100}$ &7 &[] &[$1^{0}, 5^{5}, 8^{24}, 10^{39}, 6^{40}, 3^{47}, 4^{54}, 9^{65}, 2^{78}$] \\
+        \end{tabular}
+    \end{table}
+
+\subsection{Greedy Best First Search}
+
+
+\subsection{A* Search}
+
 \end{document}
 
 
