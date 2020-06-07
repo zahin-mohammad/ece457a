@@ -44,7 +44,7 @@ def aStar(initState, goalState):
     # maps state to its parent
     bfsMap = {}
 
-    # Stack stores elements in the form of (heuristic + cost, row, col)
+    # Stack stores elements in the form of (heuristic, row, col)
     # Stored in Descending order
     stack = [(heuristic(initState, goalState), initState[0], initState[1])]
 
