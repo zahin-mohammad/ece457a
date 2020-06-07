@@ -106,7 +106,7 @@ The condition for the actions is as follows:
     with a cost of $2$.
 
     \begin{table}[!htp]\centering
-        \caption{Steps for BFS}\label{tab:dfs3}
+        \caption{Steps for DFS}\label{tab:dfs3}
         \scriptsize
         \begin{tabular}{lrrll}\toprule
         Step &Current Node &Goal Node & Open Queue &Closed Queue  \\\midrule
@@ -159,7 +159,7 @@ The condition for the actions is as follows:
     with a cost of $16$.
 
     \begin{table}[!htp]\centering
-        \caption{Steps for BFS}\label{tab:dfs4}
+        \caption{Steps for DFS}\label{tab:dfs4}
         \scriptsize
         \begin{tabular}{lrrll}\toprule
         Step &Current&Goal& Open Queue &Closed Queue  \\\midrule
@@ -218,11 +218,11 @@ The condition for the actions is as follows:
     with a cost of $100$.
 
     \begin{table}[!htp]\centering
-        \caption{Uniform Cost Search}\label{tab:ucs5}
+        \caption{Steps for Uniform Cost Search}\label{tab:ucs5}
         \scriptsize
         \begin{tabular}{lrrll}\toprule
         Step &Current Node &Goal Node & Open Queue &Closed Queue  \\\midrule
-        1&  &G &[$1^{0}$] &[] \\
+        1&  &7 &[$1^{0}$] &[] \\
         2& $1^{0}$ &7 &[$5^{5}, 8^{24}$] &[] \\
         3& $5^{5}$ &7 &[$8^{24}, 6^{40}$] &[$1^{0}$] \\
         4& $8^{24}$ &7 &[$10^{39}, 6^{40}, 3^{47} $] &[$1^{0}, 5^{5}$] \\
@@ -239,7 +239,56 @@ The condition for the actions is as follows:
 \subsection{Greedy Best First Search}
 
 
+    In Table \ref{tab:gbfs5} the steps of the greedy best first search algorithm are shown. In the table, a state is represented as $state^{h(n), f(n)}$, where $h(n)$ is the heuristic, and $f(n)$ is the cost to get to that state.
+    By step 7, we are processing the goal state $7$. This gives us a final path of
+    \begin{equation}
+        1 \rightarrow 8 \rightarrow 3 \rightarrow 4 \rightarrow 9 \rightarrow 7,
+    \end{equation}
+    with a cost of $130$.
+
+    \begin{table}[!htp]\centering
+        \caption{Steps for Greedy Best First Search}\label{tab:gbfs5}
+        \scriptsize
+        \begin{tabular}{lrrll}\toprule
+        Step &Current Node &Goal Node & Open Queue &Closed Queue  \\\midrule
+        1&  &7 &[$1^{78,0}$] &[] \\
+        2& $1^{78,0}$ &7 &[$8^{60,24}, 5^{75,5}$] &[] \\
+        3& $8^{60,24}$ &7 &[$3^{37,47}, 10^{57, 39}, 5^{75,5}$] &[$1^{78,0}$] \\
+        4& $3^{37,47}$ &7 &[$4^{30, 77}, 10^{57, 39}, 5^{75,5}$] &[$1^{78,0}, 8^{60,24}$] \\
+        5& $4^{30,54}$ &7 &[$9^{35, 72}, 10^{57,39}, 5^{75,5}$] &[$1^{78,0}, 8^{60,24}, 3^{37,47}$] \\
+        6& $9^{35,72}$ &7 &[$7^{0, 107}, 2^{32, 98}, 10^{57,39}, 6^{60, 98}, 5^{75,5}$] &[$1^{78,0}, 8^{60,24}, 3^{37,47}, 4^{30,54}$] \\
+        7& $7^{0,107}$ &7 &[$2^{32, 98}, 10^{57,39}, 6^{60, 98}, 5^{75,5}$] &[$1^{78,0}, 8^{60,24}, 3^{37,47}, 4^{30,54}, 9^{35,72}$] \\
+        \end{tabular}
+    \end{table}
+
+
 \subsection{A* Search}
+
+    In Table \ref{tab:a*5} the steps of the A* search algorithm are shown. In the table, a state is represented as $state^{h(n), f(n)}$, where $h(n)$ is the heuristic + the cost get to the state, and $f(n)$ is the cost to get to that state.
+    By step 11, we are processing the goal state $7$. This gives us a final path of
+    \begin{equation}
+        1 \rightarrow 8 \rightarrow 10 \rightarrow 9 \rightarrow 7,
+    \end{equation}
+    with a cost of $100$.
+
+    \begin{table}[!htp]\centering
+        \caption{Steps for Greedy Best First Search}\label{tab:a*5}
+        \scriptsize
+        \begin{tabular}{lrrll}\toprule
+        Step &Current Node &Goal Node & Open Queue &Closed Queue  \\\midrule
+        1&  &7 &[$1^{78,0}$] &[] \\
+        2& $1^{78,0}$ &7 &[$5^{80,5}, 8^{84,24}, $] &[] \\
+        3& $5^{80,5}$ &7 &[$8^{84,24}, 6^{100, 40}$] &[$1^{78,0}$] \\
+        4& $8^{84,24}$ &7 &[$3^{84,47}, 10^{96,39}, 6^{100, 40}$] &[$1^{78,0}, 5^{80,5}$] \\
+        6& $3^{84,47}$ &7 &[$4^{84,54}, 10^{96,39}, 6^{100, 40}$] &[$1^{78,0}, 5^{80,5}, 8^{84,24}$] \\
+        7& $4^{84,54}$ &7 &[$10^{96,39}, 6^{100, 40}, 9^{107,72}$] &[$1^{78,0}, 5^{80,5}, 8^{84,24}, 3^{84,47}$] \\
+        8& $10^{96,39}$ &7 &[$6^{100, 40}, 9^{100,65}$] &[$1^{78,0}, 5^{80,5}, 8^{84,24}, 3^{84,47}, 4^{84,54}$] \\
+        9& $6^{100, 40}$ &7 &[$9^{100,65}, 2^{110,78}$] &[$1^{78,0}, 5^{80,5}, 8^{84,24}, 3^{84,47}, 4^{84,54}, 10^{96,39}$] \\
+        10& $9^{100,65}$ &7 &[$7^{100,100}, 2^{110,78}$] &[$1^{78,0}, 5^{80,5}, 8^{84,24}, 3^{84,47}, 4^{84,54}, 10^{96,39}, 6^{100, 40}$] \\
+        11& $7^{100,100}$ &7 &[$2^{110,78}$] &[$1^{78,0}, 5^{80,5}, 8^{84,24}, 3^{84,47}, 4^{84,54}, 10^{96,39}, 6^{100, 40}, 9^{100,65}$] \\
+        \end{tabular}
+    \end{table}
+
 
 \end{document}
 
