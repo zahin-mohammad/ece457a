@@ -79,10 +79,10 @@ The condition for the actions is as follows:
     \end{equation}
     with a cost of $2$.
     \begin{table}[!htp]\centering
-        \caption{Steps for BFS}\label{tab:bfs3}
+        \caption{Steps for Breadth First Search}\label{tab:bfs3}
         \scriptsize
         \begin{tabular}{lrrll}\toprule
-        Step &Current Node &Goal Node & Open Queue &Closed Queue  \\\midrule
+        Step &Current &Goal & Open Queue &Closed Queue  \\\midrule
         1&  &I &[$A^0$] &[] \\
         2& $A^0$ &I &[$B^1, D^1, E^1$] &[] \\
         3& $B^1$ &I &[$D^1, E^1, G^2$] &[$A^0$] \\
@@ -106,10 +106,10 @@ The condition for the actions is as follows:
     with a cost of $2$.
 
     \begin{table}[!htp]\centering
-        \caption{Steps for DFS}\label{tab:dfs3}
+        \caption{Steps for Depth First Search}\label{tab:dfs3}
         \scriptsize
         \begin{tabular}{lrrll}\toprule
-        Step &Current Node &Goal Node & Open Queue &Closed Queue  \\\midrule
+        Step &Current &Goal & Open Queue &Closed Queue  \\\midrule
         1&  &I &[$A^0$] &[] \\
         2& $A^0$ &I &[$E^1, D^1, B^1$] &[] \\
         3& $E^1$ &I &[$I^2, H^2, G^2, D^1, B^1$] &[$A^0$] \\
@@ -119,7 +119,7 @@ The condition for the actions is as follows:
 
 
 \section{Question 4}
-    NOTE: For this question, I assume that states can be repeated as it was not stated in the document.
+    NOTE: For this question, it is assumed that states can be repeated as it was not stated in the document.
 \subsection{Breadth-First Search}
     In Table \ref{tab:bfs4} the steps of the breadth first search algorithm are shown. The open-queue is a FIFO queue, with the next element being the left-most element in the array.
     By step 14, we are processing the goal state $G$. This gives us a final path of
@@ -129,10 +129,10 @@ The condition for the actions is as follows:
     with a cost of $12$.
 
     \begin{table}[!htp]\centering
-        \caption{Steps for BFS}\label{tab:bfs4}
+        \caption{Steps for Breadth First Search}\label{tab:bfs4}
         \scriptsize
         \begin{tabular}{lrrll}\toprule
-        Step &Node &Goal & Open Queue &Closed Queue  \\\midrule
+        Step &Current &Goal & Open Queue &Closed Queue  \\\midrule
         1&  &G &[$S^0$] &[] \\
         2& $S^0$ &G &[$A^3, D^4$] &[] \\
         3& $A^3$ &G &[$D^4, B^7, D^8$] &[$S^0$] \\
@@ -159,7 +159,7 @@ The condition for the actions is as follows:
     with a cost of $16$.
 
     \begin{table}[!htp]\centering
-        \caption{Steps for DFS}\label{tab:dfs4}
+        \caption{Steps for Depth First Search}\label{tab:dfs4}
         \scriptsize
         \begin{tabular}{lrrll}\toprule
         Step &Current&Goal& Open Queue &Closed Queue  \\\midrule
@@ -187,10 +187,10 @@ The condition for the actions is as follows:
     with a cost of $12$.
 
     \begin{table}[!htp]\centering
-        \caption{Uniform Cost Search}\label{tab:ucs4}
+        \caption{Steps for Uniform Cost Search}\label{tab:ucs4}
         \scriptsize
         \begin{tabular}{lrrll}\toprule
-        Step &Current Node &Goal Node & Open Queue &Closed Queue  \\\midrule
+        Step &Current &Goal & Open Queue &Closed Queue  \\\midrule
         1&  &G &[$S^0$] &[] \\
         2& $S^0$ &G &[$A^3, D^4$] &[] \\
         3& $A^3$ &G &[$D^4, B^7, D^8$] &[$S^0$] \\
@@ -221,7 +221,7 @@ The condition for the actions is as follows:
         \caption{Steps for Uniform Cost Search}\label{tab:ucs5}
         \scriptsize
         \begin{tabular}{lrrll}\toprule
-        Step &Current Node &Goal Node & Open Queue &Closed Queue  \\\midrule
+        Step &Current &Goal & Open Queue &Closed Queue  \\\midrule
         1&  &7 &[$1^{0}$] &[] \\
         2& $1^{0}$ &7 &[$5^{5}, 8^{24}$] &[] \\
         3& $5^{5}$ &7 &[$8^{24}, 6^{40}$] &[$1^{0}$] \\
@@ -244,13 +244,13 @@ The condition for the actions is as follows:
     \begin{equation}
         1 \rightarrow 8 \rightarrow 3 \rightarrow 4 \rightarrow 9 \rightarrow 7,
     \end{equation}
-    with a cost of $130$.
+    with a cost of $107$.
 
     \begin{table}[!htp]\centering
         \caption{Steps for Greedy Best First Search}\label{tab:gbfs5}
         \scriptsize
         \begin{tabular}{lrrll}\toprule
-        Step &Current Node &Goal Node & Open Queue &Closed Queue  \\\midrule
+        Step &Current &Goal & Open Queue &Closed Queue  \\\midrule
         1&  &7 &[$1^{78,0}$] &[] \\
         2& $1^{78,0}$ &7 &[$8^{60,24}, 5^{75,5}$] &[] \\
         3& $8^{60,24}$ &7 &[$3^{37,47}, 10^{57, 39}, 5^{75,5}$] &[$1^{78,0}$] \\
@@ -288,8 +288,50 @@ The condition for the actions is as follows:
         11& $7^{100,100}$ &7 &[$2^{110,78}$] &[$1^{78,0}, 5^{80,5}, 8^{84,24}, 3^{84,47}, 4^{84,54}, 10^{96,39}, 6^{100, 40}, 9^{100,65}$] \\
         \end{tabular}
     \end{table}
+\section{Question 6}
+For all the search techniques in this question, the output path can be seen in a colored graph from the console output of the python script $q6.py$.
+\subsection{Breadth First Search}
+    In Table \ref{tab:bfs6} the results of the breadth first search are shown. The complete path of the search is available in file $q6-output.txt$.
+    \begin{table}[!htp]\centering
+        \caption{Search Summary for Breadth First Search}\label{tab:bfs6}
+        \scriptsize
+        \begin{tabular}{lrrll}\toprule
+        Initial State &Goal State &Visited States&Expanded States&Path Cost  \\\midrule
+        $(0,0)$ & $(24,24)$ & 449 & 450 & 49 \\
+        $(2, 11)$ & $(2, 21)$ & 269 & 252 & 21 \\
+        $(2, 11)$ & $(23, 19)$ & 386 & 378 & 30 \\
+    \end{tabular}
+    \end{table}
 
 
+\subsection{Depth First Search}
+    In Table \ref{tab:dfs6} the results of the depth first search are shown. The complete path of the search is available in file $q6-output.txt$.
+    \begin{table}[!htp]\centering
+        \caption{Search Summary for Depth First Search}\label{tab:dfs6}
+        \scriptsize
+        \begin{tabular}{lrrll}\toprule
+        Initial State &Goal State &Visited States&Expanded States&Path Cost  \\\midrule
+        $(0,0)$ & $(24,24)$ & 426 & 360 & 95 \\
+        $(2, 11)$ & $(2, 21)$ & 312 & 221 & 123 \\
+        $(2, 11)$ & $(23, 19)$ & 161 & 92 & 90 \\
+    \end{tabular}
+    \end{table}
+
+\subsection{A* Search}
+    In Table \ref{tab:a*6} the results of the A* search are shown. The complete path of the search is available in file $q6-output.txt$.
+    \setlength{\parskip}{6pt}
+
+    The heuristic used in this search is $\Delta x^2 + \Delta y^2$, a value proportional to the euclidean distance. As the goal is to get from state $x$ to state $y$ with minimum cost, it is reasonable to assume that points closer to $y$ will likely have a lower path cost. The actual euclidean distance was not used as the value was only ever used to maintain a priority queue.
+    \begin{table}[!htp]\centering
+        \caption{Search Summary for A* Search}\label{tab:a*6}
+        \scriptsize
+        \begin{tabular}{lrrll}\toprule
+        Initial State &Goal State &Visited States&Expanded States&Path Cost  \\\midrule
+        $(0,0)$ & $(24,24)$ & 91 & 50 & 49 \\
+        $(2, 11)$ & $(2, 21)$ & 51 & 29 & 21 \\
+        $(2, 11)$ & $(23, 19)$ & 75 & 34 & 32 \\
+    \end{tabular}
+    \end{table}
 \end{document}
 
 
