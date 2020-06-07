@@ -49,7 +49,6 @@ def aStar(initState, goalState):
     stack = [(heuristic(initState, goalState), initState[0], initState[1])]
 
     while len(stack):
-        # print(stack)
         state = stack.pop()
         nodesExpanded +=1
         if (state[1], state[2]) == goalState:
