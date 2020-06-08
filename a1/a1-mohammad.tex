@@ -290,8 +290,12 @@ The condition for the actions is as follows:
     \end{table}
 \section{Question 6}
 For all the search techniques in this question, the output path can be seen in a colored graph from the console output of the python script $q6.py$.
+
 \subsection{Breadth First Search}
     In Table \ref{tab:bfs6} the results of the breadth first search are shown. The complete path of the search is available in file $q6-output.txt$.
+    \setlength{\parskip}{6pt}
+
+    The breadth first search is implemented in an iterative fashion by maintaining a FIFO queue. States are expanded in the order of UP, DOWN, LEFT, RIGHT, and appended to the queue in that order. In every iteration, the front first element in the queue is removed and expanded. This repeats until there are no states left in the stack. A $hashmap$ is used to store a mapping from child to parent, and once the goal state is found, this mapping of child to parent is traversed from goal state to initial state, which becomes the final path.
     \begin{table}[!htp]\centering
         \caption{Search Summary for Breadth First Search}\label{tab:bfs6}
         \scriptsize
@@ -306,6 +310,9 @@ For all the search techniques in this question, the output path can be seen in a
 
 \subsection{Depth First Search}
     In Table \ref{tab:dfs6} the results of the depth first search are shown. The complete path of the search is available in file $q6-output.txt$.
+    \setlength{\parskip}{6pt}
+    
+    The depth first search is implemented in the same way as breadth first search except for a single key difference. In each iteration, instead of choosing the first element in the queue, depth first search chooses the last element in the queue. This turns the queue into a LIFO queue. The same method for expanding nodes, and deriving the final path is used as in the breadth first search case.
     \begin{table}[!htp]\centering
         \caption{Search Summary for Depth First Search}\label{tab:dfs6}
         \scriptsize
@@ -322,6 +329,9 @@ For all the search techniques in this question, the output path can be seen in a
     \setlength{\parskip}{6pt}
 
     The heuristic used in this search is $\Delta x^2 + \Delta y^2$, a value proportional to the euclidean distance. As the goal is to get from state $x$ to state $y$ with minimum cost, it is reasonable to assume that points closer to $y$ will likely have a lower path cost. The actual euclidean distance was not used as the value was only ever used to maintain a priority queue.
+    \setlength{\parskip}{6pt}
+    
+    The a* search is implemented in the same way as breadth first search except for two key differences. In each iteration, instead of choosing the first element in the queue, a* search chooses the last element in the queue. Additionally, after all children have been added to the queue, the queue is sorted in descending order based on the heuristic value of each state. This ensures that in each iteration, the state with the smallest heuristic value is explored. The same method for expanding nodes, and deriving the final path is used as in the breadth first search case.
     \begin{table}[!htp]\centering
         \caption{Search Summary for A* Search}\label{tab:a*6}
         \scriptsize
