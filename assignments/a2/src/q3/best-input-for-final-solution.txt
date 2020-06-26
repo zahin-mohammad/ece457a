@@ -1,0 +1,4 @@
+Initial State: 6 2 3 19 10 11 15 1 12 18 16 17 5 8 7 13 14 4 0 9
+Initial Cost: 1731.0
+Final State: 16 4 7 10 3 0 6 19 14 18 17 9 11 13 1 2 5 12 8 15
+Final Cost: 1319.0

@@ -1,0 +1,6 @@
+Tabu List Size: 5
+Initial State: 15 6 11 7 10 5 0 13 16 18 9 14 17 2 12 19 3 8 4 1
+Initial Cost: 1750.0
+Final State: 8 13 1 17 15 2 9 14 18 3 12 11 19 7 10 5 0 6 4 16
+Final Cost: 1301.0
+

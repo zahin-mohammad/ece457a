@@ -1,0 +1,8 @@
+Running Trigonometric Schedule
+Start State: (92.19460414241004, -29.695077749508414)
+Start Temp: 0.001
+Final State: (3.144010511144751, 3.143614114605061)
+Final Temp: 1e-05
+Iterations per T: 1000
+f(final_state): -0.9999851015970543
+Error from ideal value: 0.0014898402945662248%
