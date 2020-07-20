@@ -19,7 +19,7 @@ def simulation(
         start = time.time()
         parents = parent_selection(population)
         children = mutation(crossover(parents))
-        population = survivor_selection(children, parents)
+        population = survivor_selection(children, population)
         best_per_generation.append(best_of_generation(population))
         end = time.time()
         if debug:
