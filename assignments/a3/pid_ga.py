@@ -39,9 +39,9 @@ class ProportionalIntegralDifferentialGAS():
 
     def fitness(self, individual):
         try:
-            return self.cache.setdefault(tuple(individual), 1.0 / sum(q1_perfFNC(*individual)))
+            return self.cache.setdefault(individual, 1.0 / sum(q1_perfFNC(*individual)))
         except:
-            return self.cache.setdefault(tuple(individual), 0)
+            return self.cache.setdefault(individual, 0)
 
     def mutation(self, individuals):
         for i, _ in enumerate(individuals):
@@ -59,7 +59,7 @@ class ProportionalIntegralDifferentialGAS():
         random.shuffle(parents)
 
         # Uniform Crossover
-        for i in range(1, len(parents), 1):
+        for i in range(1, len(parents), 2):
             child_a, child_b = list(parents[i-1]), list(parents[i])
 
             for k, gene in enumerate(child_a):
