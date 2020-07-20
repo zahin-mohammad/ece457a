@@ -1,10 +1,8 @@
-# population_size = 50
-# generation_count = 150
-# p_c = 0.6
-# mutation_probability = 0.25
 import numpy as np
 import heapq
-from perffcn import q2_perfFNC
+from perffcn import q1_perfFNC
+import random
+
 
 k_p_lower = 2.00
 k_p_upper = 18.00
@@ -22,103 +20,82 @@ class ProportionalIntegralDifferentialGAS():
                  generation_count=150,
                  prob_crossover=0.6,
                  prob_mutation=0.25,
-                 mutation_sigma=1.0,
                  survival_count=2):
         super().__init__()
         self.population_size = population_size
         self.generation_count = generation_count
         self.p_c = prob_crossover
         self.p_m = prob_mutation
-        self.sigma = mutation_sigma
         self.survival_count = survival_count
+        self.cache = {}
 
     def init_population(self):
-        pop = np.empty((0, 3), float)
-        for i in range(self.population_size):
-            genes = np.round(np.array([
+
+        return [tuple(np.round(np.array([
                 np.random.uniform(low=k_p_lower, high=k_p_upper),
                 np.random.uniform(low=T_I_lower, high=T_I_upper),
                 np.random.uniform(low=T_D_lower, high=T_D_upper)
-            ]), 2)
-            pop = np.append(pop, [genes], axis=0)
-        return pop
+                ]), 2)) for i in range(self.population_size)]
 
     def fitness(self, individual):
-        ISE, t_r, t_s, M_p = q2_perfFNC(*individual)
-        return 1/ISE
+        try:
+            return self.cache.setdefault(tuple(individual), 1.0 / sum(q1_perfFNC(*individual)))
+        except:
+            return self.cache.setdefault(tuple(individual), 0)
 
     def mutation(self, individuals):
-        for i, individual in enumerate(individuals):
+        for i, _ in enumerate(individuals):
             if np.random.uniform() <= (self.p_m):
-                genes = np.round(np.array([
+                individuals[i] = tuple(np.round(np.array([
                     np.random.uniform(low=k_p_lower, high=k_p_upper),
                     np.random.uniform(low=T_I_lower, high=T_I_upper),
                     np.random.uniform(low=T_D_lower, high=T_D_upper)
-                ]), 2)
-                individuals[i] = genes
+                ]), 2))
         return individuals
 
     def crossover(self, parents):
-        children = np.empty((0, 3), float)
-        np.random.shuffle(parents)
+
+        children = []
+        random.shuffle(parents)
 
         # Uniform Crossover
-        for i in range(1, parents.shape[0], 1):
-            child_a, child_b = parents[i-1], parents[i]
+        for i in range(1, len(parents), 1):
+            child_a, child_b = list(parents[i-1]), list(parents[i])
 
-            for i, gene in enumerate(child_a):
-                if np.random.uniform() <= (1-self.p_c):
-                    child_a[i], child_b[i] = child_b[i], child_a[i]
-
-            children = np.append(children, [child_a], axis=0)
-            children = np.append(children, [child_b], axis=0)
+            for k, gene in enumerate(child_a):
+                if np.random.uniform() <= (self.p_c):
+                    child_a[k], child_b[k] = child_b[k], child_a[k]
+            child_a, child_b = tuple(child_a), tuple(child_b)
+            children.extend([child_a, child_b])
         return children
 
-    def within_range(self, individual):
-        if k_p_lower <= individual[0] <= k_p_upper and\
-                T_I_lower <= individual[1] <= T_I_upper and\
-                T_D_lower <= individual[2] <= T_D_upper:
-            return True
-        return False
+    def survivor_selection(self, next_generation, current_generation):
 
-    def survivor_selection(self, next_generation, best_of_current):
-        for individual in best_of_current:
-            next_generation = np.append(next_generation, [individual], axis=0)
+        worst_x = set(heapq.nsmallest(
+            self.survival_count, next_generation, key=self.fitness))
+
+        to_remove = []
+        for i, individual in enumerate(next_generation):
+            if individual in worst_x:
+                to_remove.append(i)
+                worst_x.remove(individual)
+
+        for i in reversed(to_remove):
+            del next_generation[i]
+
+        next_generation.extend(heapq.nlargest(
+            self.survival_count, current_generation, key=self.fitness))
         return next_generation
 
-    def roulette_population(self, population, selection_prob):
-        return population[np.random.choice(population.shape[0], p=selection_prob)]
-
     def parent_selection(self, individuals):
-        scores = []
-        to_remove = []
-        max = 0
-        for i, individual in enumerate(individuals):
-            try:
-                i_fitness = self.fitness(individual)
-                scores.append((i, i_fitness))
-                max += i_fitness
-            except:
-                to_remove.append(i)
-
-        individuals = np.delete(individuals, to_remove, axis=0)
-        scores.sort(reverse=True, key=lambda x: x[1])
-
-        selection_prob = [score[1]/max for score in scores]
-        new_population = np.empty((0, 3), float)
-
-        # Spin roulette wheel until we get enough individuals
-        while new_population.shape[0] < self.population_size and\
-                new_population.shape[0] == individuals.shape[0]:
-            parent = self.roulette_population(individuals, selection_prob)
-            new_population = np.append(
-                new_population, [parent], axis=0)
-
-        best_survivors = [individuals[scores[i][0]]
-                          for i in range(self.survival_count)]
-
-        return new_population, best_survivors
+        fitnesses = np.array([self.fitness(individual)
+                              for individual in individuals])
+        selection_prob = fitnesses / fitnesses.sum()
+        # Roulette wheel
+        new_gen = [individuals[i] for i in np.random.choice(
+            len(individuals), len(individuals), p=selection_prob)]
+        return new_gen[:self.population_size]
 
     def best_of_population(self, population):
-
-        heapq.nlargest(1, population, key=self.fitness)
+        best_individual = max(population, key=self.fitness)
+        return self.fitness(best_individual), best_individual
