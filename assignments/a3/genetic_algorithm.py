@@ -1,6 +1,7 @@
 from pid_ga import ProportionalIntegralDifferentialGAS
 import time
 import sys
+import matplotlib.pyplot as plt
 
 
 def simulation(
@@ -24,39 +25,99 @@ def simulation(
         end = time.time()
         if debug:
             print(
-                f'For gen: {i+1} fitness:{best_per_generation[-1][0]} for individual: {best_per_generation[-1][1]} took: {end-start}', flush=True)
+                f'For gen: {i+1} fitness:{best_per_generation[-1]} took: {end-start}', flush=True)
 
     return best_per_generation
 
 
 if __name__ == "__main__":
-    default_PID_GAS = ProportionalIntegralDifferentialGAS()
-    fitness_per_generation = simulation(
-        default_PID_GAS.generation_count,
-        default_PID_GAS.init_population,
-        default_PID_GAS.parent_selection,
-        default_PID_GAS.crossover,
-        default_PID_GAS.mutation,
-        default_PID_GAS.survivor_selection,
-        default_PID_GAS.best_of_population,
-        True
-    )
-    print(fitness_per_generation[-1][0])
-    print(fitness_per_generation[-1][1])
+    # default_PID_GAS = ProportionalIntegralDifferentialGAS()
+    # fitness_per_generation = simulation(
+    #     default_PID_GAS.generation_count,
+    #     default_PID_GAS.init_population,
+    #     default_PID_GAS.parent_selection,
+    #     default_PID_GAS.crossover,
+    #     default_PID_GAS.mutation,
+    #     default_PID_GAS.survivor_selection,
+    #     default_PID_GAS.best_of_population,
+    #     True
+    # )
+    # print(fitness_per_generation[-1][0])
+    # print(fitness_per_generation[-1][1])
 
-    # for i in range(3):
-    #     generation_count = (i+1)*50
-    #     pid = ProportionalIntegralDifferentialGAS(
-    #         generation_count=generation_count)
-    # for i in range(3):
-    #     population_size = (i+1)*25
-    #     pid = ProportionalIntegralDifferentialGAS(
-    #         population_size=population_size)
-    # for i in range(3):
-    #     prob_crossover = (i+1)*0.3
-    #     pid = ProportionalIntegralDifferentialGAS(
-    #         prob_crossover=prob_crossover)
-    # for i in range(3):
-    #     prob_mutation = (i+1)*0.125
-    #     pid = ProportionalIntegralDifferentialGAS(
-    #         prob_mutation=prob_mutation)
+    def get_fitness(pid):
+        return simulation(
+            pid.generation_count,
+            pid.init_population,
+            pid.parent_selection,
+            pid.crossover,
+            pid.mutation,
+            pid.survivor_selection,
+            pid.best_of_population,
+            True
+        )
+
+    def graph(title, data):
+        # line 1 points
+        for series in data:
+            print(series[1])
+            x = range(1, len(series[1])+1)
+            y = series[1]
+            # plotting the line 1 points
+            plt.plot(x, y, label=series[0])
+
+        plt.xlabel('Generations')
+        plt.ylabel('Fitness')
+        plt.title(title)
+        plt.legend()
+
+        # plt.set_size_inches((8.5, 11), forward=False)
+        plt.savefig(title, dpi=500)
+        # plt.show()
+
+    if sys.argv[1] == '0':
+        title = "Fitness vs Generation Count"
+        data = []
+        for i in range(3):
+            generation_count = (i+1)*50
+            pid = ProportionalIntegralDifferentialGAS(
+                generation_count=generation_count)
+            data.append((generation_count, get_fitness(pid)))
+        graph(title, data)
+
+    elif sys.argv[1] == '1':
+        title = "Fitness vs Population Size"
+        data = []
+        for i in range(3):
+            population_size = (i+1)*25
+            pid = ProportionalIntegralDifferentialGAS(
+                population_size=population_size)
+            data.append((f'pop-size: {population_size}', get_fitness(pid)))
+        graph(title, data)
+
+    elif sys.argv[1] == '2':
+        title = "Fitness vs Crossover Probability"
+        data = []
+        for i in range(3):
+            prob_crossover = (i+1)*0.3
+            pid = ProportionalIntegralDifferentialGAS(
+                prob_crossover=prob_crossover)
+            data.append((f'p_c: {prob_crossover}', get_fitness(pid)))
+        graph(title, data)
+
+    elif sys.argv[1] == '3':
+        title = "Fitness vs Mutation Probability"
+        data = []
+        for i in range(3):
+            prob_mutation = (i+1)*0.125
+            pid = ProportionalIntegralDifferentialGAS(
+                prob_mutation=prob_mutation)
+            data.append((f'p_m: {prob_mutation}', get_fitness(pid)))
+        graph(title, data)
+
+    elif sys.argv[1] == '4':
+        title = "Fitness vs Generation"
+        data = []
+        pid = ProportionalIntegralDifferentialGAS()
+        data.append((f'', get_fitness(pid)))
+        graph(title, data)

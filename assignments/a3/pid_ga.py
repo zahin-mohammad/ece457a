@@ -98,4 +98,4 @@ class ProportionalIntegralDifferentialGAS():
 
     def best_of_population(self, population):
         best_individual = max(population, key=self.fitness)
-        return self.fitness(best_individual), best_individual
+        return self.fitness(best_individual)
