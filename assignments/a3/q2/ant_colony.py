@@ -56,6 +56,7 @@ def online_simulation(
     pheromones = init_pheromone()
 
     best_solutions = []
+
     for x in termination_condition():
         best_solution = None
         ants = init_ants()
@@ -78,6 +79,7 @@ def online_simulation(
             ants[i].loop_back()
         best_solution = get_best_solution(ants, best_solution)
         best_solutions.append(best_solution)
+        print(best_solution.solution_length)
 
         pheromones = offline_pheromone_update(ants, pheromones)
     return best_solutions
@@ -188,7 +190,7 @@ def graph(title, data):
 
 if __name__ == "__main__":
     m = [100]*10
-    iteration_count = [100]*10
+    iteration_count = [1000]*10
     alpha = [2]*10
     beta = [2]*10
     q0 = [0.7]*10
@@ -276,3 +278,21 @@ if __name__ == "__main__":
         data.append(
             (labels[i], [ant.solution_length for ant in best_solutions]))
     graph(title, data)
+
+    # best_solutions = online_simulation(
+    #     init_pheromone,
+    #     init_ants(
+    #         m=29),
+    #     termination_condition(
+    #         iteration_count=100000),
+    #     state_transition(
+    #         alpha=1.0,
+    #         beta=5.0,
+    #         q0=0.85),
+    #     online_pheromone_update(
+    #         rho=0.6),
+    #     offline_pheromone_update(
+    #         rho=0.6),
+    #     get_best_solution,
+    #     True
+    # )
