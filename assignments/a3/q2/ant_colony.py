@@ -54,9 +54,10 @@ def online_simulation(
     is_online,                   # boolean,
 ):
     pheromones = init_pheromone()
-    best_solution = None
+
     best_solutions = []
     for x in termination_condition():
+        best_solution = None
         ants = init_ants()
         all_ants_have_solution = False
 
