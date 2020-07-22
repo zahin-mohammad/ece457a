@@ -58,12 +58,10 @@ if __name__ == "__main__":
         )
 
     def graph(title, data):
-        # line 1 points
         for series in data:
             print(series[1])
             x = range(1, len(series[1])+1)
             y = series[1]
-            # plotting the line 1 points
             plt.plot(x, y, label=series[0])
 
         plt.xlabel('Generations')
@@ -71,9 +69,7 @@ if __name__ == "__main__":
         plt.title(title)
         plt.legend()
 
-        # plt.set_size_inches((8.5, 11), forward=False)
         plt.savefig(title, dpi=500)
-        # plt.show()
 
     if sys.argv[1] == '0':
         title = "Fitness vs Generation Count"
