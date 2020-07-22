@@ -99,7 +99,8 @@ if __name__ == "__main__":
         title = "Fitness vs Crossover Probability"
         data = []
         for i in range(3):
-            prob_crossover = (i+1)*0.3
+            # 0.6 -> 0.9
+            prob_crossover = 0.6+(i)*0.1
             pid = ProportionalIntegralDifferentialGAS(
                 prob_crossover=prob_crossover)
             data.append((f'p_c: {prob_crossover}', get_fitness(pid)))
@@ -109,7 +110,8 @@ if __name__ == "__main__":
         title = "Fitness vs Mutation Probability"
         data = []
         for i in range(3):
-            prob_mutation = (i+1)*0.125
+            # 0.3 -> 0.6
+            prob_mutation = 0.3 + (i)*0.1
             pid = ProportionalIntegralDifferentialGAS(
                 prob_mutation=prob_mutation)
             data.append((f'p_m: {prob_mutation}', get_fitness(pid)))
