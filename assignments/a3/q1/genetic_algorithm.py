@@ -31,19 +31,6 @@ def simulation(
 
 
 if __name__ == "__main__":
-    # default_PID_GAS = ProportionalIntegralDifferentialGAS()
-    # fitness_per_generation = simulation(
-    #     default_PID_GAS.generation_count,
-    #     default_PID_GAS.init_population,
-    #     default_PID_GAS.parent_selection,
-    #     default_PID_GAS.crossover,
-    #     default_PID_GAS.mutation,
-    #     default_PID_GAS.survivor_selection,
-    #     default_PID_GAS.best_of_population,
-    #     True
-    # )
-    # print(fitness_per_generation[-1][0])
-    # print(fitness_per_generation[-1][1])
 
     def get_fitness(pid):
         return simulation(
