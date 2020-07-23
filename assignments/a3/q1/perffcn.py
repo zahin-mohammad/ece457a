@@ -2,18 +2,14 @@ from control import TransferFunction, feedback, step_info, step_response, series
 
 # Credit to Nick Shields for creating the python implementation of the matlab code
 
+t = [i/100 for i in range(0, 10000,)]
+
 
 def q1_perfFNC(Kp, Ti, Td):
     G = Kp * TransferFunction([Ti * Td, Ti, 1], [Ti, 0])
     F = TransferFunction(1, [1, 6, 11, 6, 0])
     sys = feedback(series(G, F), 1)
     sysinf = step_info(sys)
-
-    t = []
-    i = 0
-    while i < 100:
-        t.append(i)
-        i += 0.01
 
     T, y = step_response(sys, T=t)
 

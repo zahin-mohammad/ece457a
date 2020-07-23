@@ -29,6 +29,17 @@ class ProportionalIntegralDifferentialGAS():
         self.survival_count = survival_count
         self.cache = {}
 
+    def reset(self, population_size=50, generation_count=150,
+              prob_crossover=0.6,
+              prob_mutation=0.25,
+              survival_count=2):
+        self.population_size = population_size
+        self.generation_count = generation_count
+        self.p_c = prob_crossover
+        self.p_m = prob_mutation
+        self.survival_count = survival_count
+        self.cache = {}
+
     def init_population(self):
 
         return [tuple(np.round(np.array([
@@ -45,12 +56,14 @@ class ProportionalIntegralDifferentialGAS():
 
     def mutation(self, individuals):
         for i, _ in enumerate(individuals):
-            if np.random.uniform() <= (self.p_m):
-                individuals[i] = tuple(np.round(np.array([
-                    np.random.uniform(low=k_p_lower, high=k_p_upper),
-                    np.random.uniform(low=T_I_lower, high=T_I_upper),
-                    np.random.uniform(low=T_D_lower, high=T_D_upper)
-                ]), 2))
+            genes = []
+            for k, gene in enumerate(individuals[i]):
+                if np.random.uniform() <= (self.p_m):
+                    genes.append(np.random.uniform(
+                        low=k_p_lower, high=k_p_upper))
+                else:
+                    genes.append(gene)
+            individuals[i] = tuple(np.round(np.array(genes), 2))
         return individuals
 
     def crossover(self, parents):
@@ -98,4 +111,4 @@ class ProportionalIntegralDifferentialGAS():
 
     def best_of_population(self, population):
         best_individual = max(population, key=self.fitness)
-        return self.fitness(best_individual)
+        return self.fitness(best_individual), best_individual

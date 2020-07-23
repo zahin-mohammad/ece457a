@@ -21,11 +21,13 @@ def simulation(
         parents = parent_selection(population)
         children = mutation(crossover(parents))
         population = survivor_selection(children, population)
-        best_per_generation.append(best_of_generation(population))
+        best_fitness, best_individual = best_of_generation(population)
+        best_per_generation.append(best_fitness)
         end = time.time()
         if debug:
             print(
-                f'For gen: {i+1} fitness:{best_per_generation[-1]} took: {end-start}', flush=True)
+                f'For gen: {i+1} fitness:{best_per_generation[-1]} took: {end-start} s', flush=True)
+            print(f'best_individual:{best_individual}', flush=True)
 
     return best_per_generation
 
@@ -46,26 +48,32 @@ if __name__ == "__main__":
 
     def graph(title, data):
         for series in data:
-            print(series[1])
+            has_legend = False
             x = range(1, len(series[1])+1)
             y = series[1]
-            plt.plot(x, y, label=series[0])
+            if series[0] != '':
+                plt.plot(x, y)
+            else:
+                has_legend = True
+                plt.plot(x, y, label=series[0])
 
         plt.xlabel('Generations')
         plt.ylabel('Fitness')
+        if has_legend:
+            plt.legend()
         plt.title(title)
-        plt.legend()
 
         plt.savefig(title, dpi=500)
 
+    pid = ProportionalIntegralDifferentialGAS()
     if sys.argv[1] == '0':
         title = "Fitness vs Generation Count"
         data = []
         for i in range(3):
             generation_count = (i+1)*50
-            pid = ProportionalIntegralDifferentialGAS(
-                generation_count=generation_count)
-            data.append((generation_count, get_fitness(pid)))
+            pid.reset(generation_count=generation_count)
+            data.append(
+                (f'generation-count: {generation_count}', get_fitness(pid)))
         graph(title, data)
 
     elif sys.argv[1] == '1':
@@ -73,9 +81,9 @@ if __name__ == "__main__":
         data = []
         for i in range(3):
             population_size = (i+1)*25
-            pid = ProportionalIntegralDifferentialGAS(
-                population_size=population_size)
-            data.append((f'pop-size: {population_size}', get_fitness(pid)))
+            pid.reset(population_size=population_size)
+            data.append(
+                (f'pop-size: {population_size}', get_fitness(pid)))
         graph(title, data)
 
     elif sys.argv[1] == '2':
@@ -84,9 +92,9 @@ if __name__ == "__main__":
         for i in range(3):
             # 0.6 -> 0.9
             prob_crossover = 0.6+(i)*0.1
-            pid = ProportionalIntegralDifferentialGAS(
-                prob_crossover=prob_crossover)
-            data.append((f'p_c: {prob_crossover}', get_fitness(pid)))
+            pid.reset(prob_crossover=prob_crossover)
+            data.append(
+                (f'p_c: {prob_crossover}', get_fitness(pid)))
         graph(title, data)
 
     elif sys.argv[1] == '3':
@@ -95,9 +103,9 @@ if __name__ == "__main__":
         for i in range(3):
             # 0.3 -> 0.6
             prob_mutation = 0.3 + (i)*0.1
-            pid = ProportionalIntegralDifferentialGAS(
-                prob_mutation=prob_mutation)
-            data.append((f'p_m: {prob_mutation}', get_fitness(pid)))
+            pid.reset(prob_mutation=prob_mutation)
+            data.append(
+                (f'p_m: {prob_mutation}', get_fitness(pid)))
         graph(title, data)
 
     elif sys.argv[1] == '4':
