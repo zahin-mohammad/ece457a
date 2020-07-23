@@ -37,10 +37,14 @@ class ProportionalIntegralDifferentialGAS():
         self.cache = {}
         self.init_pop = init_pop
 
-    def reset(self, population_size=50, generation_count=150,
+    def reset(self, population_size=50,
+              generation_count=150,
               prob_crossover=0.6,
               prob_mutation=0.25,
-              survival_count=2):
+              survival_count=2,
+              init_pop=None):
+        if population_size != 50:
+            init_pop = []
         self.population_size = population_size
         self.generation_count = generation_count
         self.p_c = prob_crossover
