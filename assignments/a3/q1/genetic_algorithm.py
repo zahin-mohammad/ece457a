@@ -27,7 +27,8 @@ def simulation(
         if debug:
             print(
                 f'For gen: {i+1} fitness:{best_per_generation[-1]} took: {end-start} s', flush=True)
-            print(f'best_individual:{best_individual}', flush=True)
+            print(f'\tbest_individual:{best_individual}', flush=True)
+            print(f'\tpop-size: {len(population)}')
 
     return best_per_generation
 

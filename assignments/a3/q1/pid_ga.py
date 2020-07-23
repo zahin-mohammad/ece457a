@@ -2,6 +2,8 @@ import numpy as np
 import heapq
 from perffcn import q1_perfFNC
 import random
+import gc
+gc.disable()
 
 
 k_p_lower = 2.00
@@ -66,8 +68,15 @@ class ProportionalIntegralDifferentialGAS():
             genes = list(individuals[i])
             for k, gene in enumerate(individuals[i]):
                 if np.random.uniform() <= (self.p_m):
-                    genes[k] = np.random.uniform(
-                        low=k_p_lower, high=k_p_upper)
+                    if k == 1:
+                        genes[k] = np.random.uniform(
+                            low=k_p_lower, high=k_p_upper)
+                    if k == 2:
+                        genes[k] = np.random.uniform(
+                            low=T_I_lower, high=T_I_upper)
+                    if k == 3:
+                        genes[k] = np.random.uniform(
+                            low=T_D_lower, high=T_D_upper)
             individuals[i] = tuple(np.round(np.array(genes), 2))
         return individuals
 
@@ -89,21 +98,11 @@ class ProportionalIntegralDifferentialGAS():
 
     def survivor_selection(self, next_generation, current_generation):
 
-        worst_x = set(heapq.nsmallest(
-            self.survival_count, next_generation, key=self.fitness))
-
-        to_remove = []
-        for i, individual in enumerate(next_generation):
-            if individual in worst_x:
-                to_remove.append(i)
-                worst_x.remove(individual)
-
-        for i in reversed(to_remove):
-            del next_generation[i]
-
-        next_generation.extend(heapq.nlargest(
-            self.survival_count, current_generation, key=self.fitness))
-        return next_generation
+        best_of_new_pop = heapq.nsmallest(
+            self.population_size - self.survival_count, next_generation, key=self.fitness)
+        best_of_old_pop = heapq.nlargest(
+            self.survival_count, current_generation, key=self.fitness)
+        return best_of_new_pop + best_of_old_pop
 
     def parent_selection(self, individuals):
         fitnesses = np.array([self.fitness(individual)
