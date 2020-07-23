@@ -15,6 +15,12 @@ T_I_upper = 9.42
 T_D_lower = 0.25
 T_D_upper = 2.37
 
+gene_range = [
+    (k_p_lower, k_p_upper),
+    (T_I_lower, T_I_upper),
+    (T_D_lower, T_D_upper)
+]
+
 
 class ProportionalIntegralDifferentialGAS():
     def __init__(self,
@@ -43,7 +49,6 @@ class ProportionalIntegralDifferentialGAS():
         self.cache = {}
 
     def init_population(self):
-
         return [tuple(np.round(np.array([
                 np.random.uniform(low=k_p_lower, high=k_p_upper),
                 np.random.uniform(low=T_I_lower, high=T_I_upper),
@@ -51,6 +56,7 @@ class ProportionalIntegralDifferentialGAS():
                 ]), 2)) for i in range(self.population_size)]
 
     def fitness(self, individual):
+        # Do not use setdefault, it has performance issues
         if individual in self.cache:
             return self.cache[individual]
         fitness = None
@@ -66,29 +72,21 @@ class ProportionalIntegralDifferentialGAS():
     def mutation(self, individuals):
         for i, _ in enumerate(individuals):
             genes = list(individuals[i])
+            # Uniform Mutation
             for k, gene in enumerate(individuals[i]):
                 if np.random.uniform() <= (self.p_m):
-                    if k == 1:
-                        genes[k] = np.random.uniform(
-                            low=k_p_lower, high=k_p_upper)
-                    if k == 2:
-                        genes[k] = np.random.uniform(
-                            low=T_I_lower, high=T_I_upper)
-                    if k == 3:
-                        genes[k] = np.random.uniform(
-                            low=T_D_lower, high=T_D_upper)
+                    genes[k] = np.random.uniform(
+                        low=gene_range[k][0], high=gene_range[k][1])
             individuals[i] = tuple(np.round(np.array(genes), 2))
         return individuals
 
     def crossover(self, parents):
-
         children = []
         random.shuffle(parents)
 
         # Uniform Crossover
         for i in range(1, len(parents), 2):
             child_a, child_b = list(parents[i-1]), list(parents[i])
-
             for k, gene in enumerate(child_a):
                 if np.random.uniform() <= (self.p_c):
                     child_a[k], child_b[k] = child_b[k], child_a[k]
@@ -97,18 +95,18 @@ class ProportionalIntegralDifferentialGAS():
         return children
 
     def survivor_selection(self, next_generation, current_generation):
-
-        best_of_new_pop = heapq.nsmallest(
-            self.population_size - self.survival_count, next_generation, key=self.fitness)
-        best_of_old_pop = heapq.nlargest(
+        # keep a pop of population_size always
+        # remove survivor count number of worst individuals from new pop and
+        # replace with survivor count of best individuaLS old pop
+        return heapq.nsmallest(
+            self.population_size - self.survival_count, next_generation, key=self.fitness) + heapq.nlargest(
             self.survival_count, current_generation, key=self.fitness)
-        return best_of_new_pop + best_of_old_pop
 
     def parent_selection(self, individuals):
         fitnesses = np.array([self.fitness(individual)
                               for individual in individuals])
         selection_prob = fitnesses / fitnesses.sum()
-        # Roulette wheel
+        # Spin roulette wheel until we get population size number of individuals
         new_gen = [individuals[i] for i in np.random.choice(
             len(individuals), len(individuals), p=selection_prob)]
         return new_gen[:self.population_size]
