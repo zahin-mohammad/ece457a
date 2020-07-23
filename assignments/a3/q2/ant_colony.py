@@ -41,7 +41,7 @@ coordinates = [
 ]
 
 
-def online_simulation(
+def simulation(
     init_pheromone,              # f() -> {(Int,Int)->Int}
     init_ants,                   # f() -> [Ant]
     termination_condition,       # generator
@@ -253,7 +253,7 @@ if __name__ == "__main__":
     data = []
     for i in range(3):
         print(f'Doing: {labels[i]}')
-        best_solutions = online_simulation(
+        best_solutions = simulation(
             init_pheromone=init_pheromone,
             init_ants=init_ants(
                 m=m[i]),
@@ -273,21 +273,3 @@ if __name__ == "__main__":
         data.append(
             (labels[i], [ant.solution_length for ant in best_solutions]))
     graph(title, data)
-
-    # best_solutions = online_simulation(
-    #     init_pheromone,
-    #     init_ants(
-    #         m=29),
-    #     termination_condition(
-    #         iteration_count=100000),
-    #     state_transition(
-    #         alpha=1.0,
-    #         beta=5.0,
-    #         q0=0.85),
-    #     online_pheromone_update(
-    #         rho=0.6),
-    #     offline_pheromone_update(
-    #         rho=0.6),
-    #     get_best_solution,
-    #     True
-    # )
