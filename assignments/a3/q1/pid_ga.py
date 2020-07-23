@@ -2,8 +2,6 @@ import numpy as np
 import heapq
 from perffcn import q1_perfFNC
 import random
-import gc
-gc.disable()
 
 
 k_p_lower = 2.00
@@ -28,7 +26,8 @@ class ProportionalIntegralDifferentialGAS():
                  generation_count=150,
                  prob_crossover=0.6,
                  prob_mutation=0.25,
-                 survival_count=2):
+                 survival_count=2,
+                 init_pop=[]):
         super().__init__()
         self.population_size = population_size
         self.generation_count = generation_count
@@ -36,6 +35,7 @@ class ProportionalIntegralDifferentialGAS():
         self.p_m = prob_mutation
         self.survival_count = survival_count
         self.cache = {}
+        self.init_pop = init_pop
 
     def reset(self, population_size=50, generation_count=150,
               prob_crossover=0.6,
@@ -49,11 +49,13 @@ class ProportionalIntegralDifferentialGAS():
         self.cache = {}
 
     def init_population(self):
-        return [tuple(np.round(np.array([
+        if len(self.init_pop) == 0:
+            self.init_pop = [tuple(np.round(np.array([
                 np.random.uniform(low=k_p_lower, high=k_p_upper),
                 np.random.uniform(low=T_I_lower, high=T_I_upper),
                 np.random.uniform(low=T_D_lower, high=T_D_upper)
-                ]), 2)) for i in range(self.population_size)]
+            ]), 2)) for i in range(self.population_size)]
+        return self.init_pop
 
     def fitness(self, individual):
         # Do not use setdefault, it has performance issues
@@ -109,7 +111,7 @@ class ProportionalIntegralDifferentialGAS():
         # Spin roulette wheel until we get population size number of individuals
         new_gen = [individuals[i] for i in np.random.choice(
             len(individuals), len(individuals), p=selection_prob)]
-        return new_gen[:self.population_size]
+        return new_gen
 
     def best_of_population(self, population):
         best_individual = max(population, key=self.fitness)
