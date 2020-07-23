@@ -75,14 +75,15 @@ def online_simulation(
                         pheromones = online_pheromone_update(
                             ants[i], pheromones)
 
+        # For TSP, last city is also first city
         for i in range(len(ants)):
             ants[i].loop_back()
         best_solution = get_best_solution(ants, best_solution)
         best_solutions.append(best_solution)
-        print(best_solution.solution_length)
-
         pheromones = offline_pheromone_update(ants, pheromones)
     return best_solutions
+
+######################################################################################
 
 
 def init_pheromone() -> dict:  # return: map of coord -> pheromone
@@ -145,18 +146,27 @@ def state_transition(alpha: float, beta: float, q0: float):
 
 ######################################################################################
 
-def offline_pheromone_update(rho: float = 0.3) -> Callable[[list, dict], dict]:
+def offline_pheromone_update(rho: float = 0.3, Q: float = 1.0) -> Callable[[list, dict], dict]:
     def fitness_ant(ant: Ant) -> float:
         return ant.solution_length
 
     def f(ants: Ant, pheromones: dict) -> dict:
         best_ant = min(ants, key=fitness_ant)
         for key, value in pheromones.items():
-            new_pheromone = (1-rho)*value
-            i, j = key
-            if i in best_ant.tabu or j in best_ant.tabu:
-                new_pheromone += rho*(1/best_ant.solution_length)
-            pheromones[key] = new_pheromone
+            # new_pheromone =
+            # i, j = key
+            pheromones[key] = (1-rho)*value
+            # if i in best_ant.tabu and j in best_ant.tabu:
+            # new_pheromone += rho * (Q/best_ant.solution_length)
+
+        for index in range(1, len(best_ant.solution_path)):
+            i, j = best_ant.solution_path[index -
+                                          1], best_ant.solution_path[index]
+            if i > j:
+                i, j = j, i
+            new_pheromone = rho * (Q/best_ant.solution_length)
+            pheromones[(i, j)] = pheromones[(i, j)] + new_pheromone
+
         return pheromones
 
     return f
@@ -171,6 +181,8 @@ def online_pheromone_update(rho: float = 0.3) -> Callable[[Ant, dict], dict]:
             1.0/ant.get_distance((i, j))
         return pheromones
     return f
+
+######################################################################################
 
 
 def graph(title, data):
@@ -190,14 +202,14 @@ def graph(title, data):
 
 if __name__ == "__main__":
     m = [100]*10
-    iteration_count = [1000]*10
+    iteration_count = [100]*10
     alpha = [2]*10
     beta = [2]*10
     q0 = [0.7]*10
     rho1 = [0.3]*10
     rho2 = [0.3]*10
     is_online = True
-    labels = []
+    labels = ['']
     title = ""
 
     if sys.argv[1] == '0':
@@ -208,72 +220,55 @@ if __name__ == "__main__":
     if sys.argv[1] == '1':
         title = "Solution with changes in Rho2 (Online)"
         rho2 = [i * 0.3 for i in range(3)]
-        labels = [f'rho1: {rho2[i]}' for i in range(3)]
+        labels = [f'rho2: {rho2[i]}' for i in range(3)]
 
     if sys.argv[1] == '2':
-        title = "Solution with changes in alpha"
-        alpha = [i + 1 for i in range(3)]
-        labels = [f'alpha: {alpha[i]}' for i in range(3)]
+        title = "Solution with changes in q0"
+        q0 = [0.2 + (i)*0.3 for i in range(3)]
+        labels = [f'q0: {q0[i]}' for i in range(3)]
 
     if sys.argv[1] == '3':
-        title = "Solution with changes in beta"
-        beta = [i + 1 for i in range(3)]
-        labels = [f'beta: {beta[i]}' for i in range(3)]
-
-    if sys.argv[1] == '4':
         title = "Solution with changes in population size"
         m = [(i + 1)*50 for i in range(3)]
-        labels = [f'beta: {m[i]}' for i in range(3)]
+        labels = [f'pop-size: {m[i]}' for i in range(3)]
 
-    if sys.argv[1] == '5':
-        title = "Solution with changes in Rho1 (Offline) with no online update"
+    if sys.argv[1] == '4':
+        title = "Solution with changes in Rho1 (Offline) without online update"
         is_online = False
         rho1 = [i * 0.3 for i in range(3)]
         labels = [f'rho1: {rho1[i]}' for i in range(3)]
 
     if sys.argv[1] == '6':
-        title = "Solution with changes in alpha with no online update"
+        title = "Solution with changes in q0 without online update"
         is_online = False
-        alpha = [i + 1 for i in range(3)]
-        labels = [f'alpha: {alpha[i]}' for i in range(3)]
+        q0 = [0.2 + (i)*0.3 for i in range(3)]
+        labels = [f'q0: {q0[i]}' for i in range(3)]
 
     if sys.argv[1] == '7':
-        title = "Solution with changes in beta with no online update"
-        is_online = False
-        beta = [i + 1 for i in range(3)]
-        labels = [f'beta: {beta[i]}' for i in range(3)]
-
-    if sys.argv[1] == '8':
-        title = "Solution with changes in population size  with no online update"
+        title = "Solution with changes in population size without online update"
         is_online = False
         m = [(i + 1)*50 for i in range(3)]
-        labels = [f'beta: {m[i]}' for i in range(3)]
-
-    if sys.argv[1] == '9':
-        title = "Solution with changes in Rho1 (Offline) with no online update"
-        is_online = False
-        rho1 = [i * 0.3 for i in range(3)]
-        labels = [f'rho1: {rho1[i]}' for i in range(3)]
+        labels = [f'pop-size: {m[i]}' for i in range(3)]
 
     data = []
     for i in range(3):
         print(f'Doing: {labels[i]}')
         best_solutions = online_simulation(
-            init_pheromone,
-            init_ants(
+            init_pheromone=init_pheromone,
+            init_ants=init_ants(
                 m=m[i]),
-            termination_condition(
+            termination_condition=termination_condition(
                 iteration_count=iteration_count[i]),
-            state_transition(
+            state_transition=state_transition(
                 alpha=alpha[i],
                 beta=beta[i],
                 q0=q0[i]),
-            online_pheromone_update(
+            online_pheromone_update=online_pheromone_update(
                 rho=rho2[i]),
-            offline_pheromone_update(
+            offline_pheromone_update=offline_pheromone_update(
                 rho=rho1[i]),
-            get_best_solution,
-            is_online
+            get_best_solution=get_best_solution,
+            is_online=is_online
         )
         data.append(
             (labels[i], [ant.solution_length for ant in best_solutions]))
