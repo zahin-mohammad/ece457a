@@ -49,20 +49,25 @@ class ProportionalIntegralDifferentialGAS():
                 ]), 2)) for i in range(self.population_size)]
 
     def fitness(self, individual):
+        if individual in self.cache:
+            return self.cache[individual]
+        fitness = None
+
         try:
-            return self.cache.setdefault(individual, 1.0 / sum(q1_perfFNC(*individual)))
+            fitness = 1.0 / sum(q1_perfFNC(*individual))
         except:
-            return self.cache.setdefault(individual, 0)
+            fitness = 0.0
+
+        self.cache[individual] = fitness
+        return fitness
 
     def mutation(self, individuals):
         for i, _ in enumerate(individuals):
-            genes = []
+            genes = list(individuals[i])
             for k, gene in enumerate(individuals[i]):
                 if np.random.uniform() <= (self.p_m):
-                    genes.append(np.random.uniform(
-                        low=k_p_lower, high=k_p_upper))
-                else:
-                    genes.append(gene)
+                    genes[k] = np.random.uniform(
+                        low=k_p_lower, high=k_p_upper)
             individuals[i] = tuple(np.round(np.array(genes), 2))
         return individuals
 
