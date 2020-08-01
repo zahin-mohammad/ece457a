@@ -52,7 +52,7 @@ def simple_velocity(
     return f
 
 
-def gaurenteed_convergence_velocity(
+def guaranteed_convergence_velocity(
     w,
     c1, c2,
     rho,
