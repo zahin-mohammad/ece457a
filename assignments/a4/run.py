@@ -1,10 +1,13 @@
 from particle_swarm_optimization import simulation
 from fitness import six_hump_camelback
 from particle import Particle
-from velocity_update import *
+from velocity_position_update import *
 
 
-c1 = c2 = 2.05
+x_y_range = (-5.0, 5.0)
+particles = [
+    Particle(x_y_range, x_y_range) for i in range(100)
+]
 
 
 def termination_condition(iteration_count: int):
@@ -14,19 +17,21 @@ def termination_condition(iteration_count: int):
     return f
 
 
-x_y_range = (-5.0, 5.0)
-particles = [
-    Particle(x_y_range, x_y_range) for i in range(100)
-]
+c1 = c2 = 2.05
+w = 0.5
 
 
-v_update_fn = constriction_velocity(c1, c2)
+simple_velocity_position_fn = simple_velocity(c1, c2)
+inertia_velocity_position_fn = inertia_velocity(w, c1, c2)
+constriction_velocity_position_fn = constriction_velocity(c1, c2)
+guaranteed_convergence_velocity_position_fn = guaranteed_convergence_velocity(
+    w, c1, c2, )
+
+# inertia_velocity_fn = inertia_velocity()
 
 avg_best, best = simulation(
-    termination_condition=termination_condition(10000),
+    termination_condition=termination_condition(100),
     particles=particles,
     fitness_function=six_hump_camelback,
-    velocity_update=v_update_fn
+    velocity_position_update=guaranteed_convergence_velocity_position_fn
 )
-
-# print(np.array(best))

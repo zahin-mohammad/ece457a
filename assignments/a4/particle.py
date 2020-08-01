@@ -20,16 +20,12 @@ class Particle(object):
         self.p_best = self.position
 
     def fly(self,
-            global_best,
             velocity_position_update_fn,
             fitness_fn):
 
-        # Update velocity
+        # Update velocity, Update position
         self.velocity, self.position = velocity_position_update_fn(
-            self, self.p_best, global_best)
-
-        # Update position
-        self.position = position_update_fn(self.position, self.velocity)
+            self.velocity, self.position, self.p_best)
 
         # update personal_best
         self.p_best = min([self.p_best, self.position],
