@@ -82,7 +82,7 @@ def guaranteed_convergence_velocity(
         def f2(p_v, p_pos, p_best):
             if tuple(p_pos) != tuple(global_best):
                 return simple_velocity(
-                    c1, c2)(num_failure, num_success, global_best)(p_v, p_pos, p_best)
+                    c1, c2)(None, None, global_best)(p_v, p_pos, p_best)
             r2 = np.random.uniform()
             n_velocity = w*p_v + rho*(1-2*r2)
             n_position = global_best + w*p_v + rho*(1-2*r2)
