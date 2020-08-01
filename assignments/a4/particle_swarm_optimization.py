@@ -43,7 +43,7 @@ def simulation(
 
         best_fitness.append(fitness_function(
             g_best[0], g_best[1]))
-        print(
-            f"Best is {best_fitness[-1]}\tWith x,y: {g_best[0]}\t{g_best[1]}")
+        # print(
+        #     f"Best is {best_fitness[-1]}\tWith x,y: {g_best[0]}\t{g_best[1]}")
 
-    return avg_fitness, best_fitness
+    return avg_fitness, best_fitness, g_best

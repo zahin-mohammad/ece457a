@@ -63,23 +63,21 @@ def guaranteed_convergence_velocity(
     w,
     c1, c2,
 ):
-    rhos = [1.0]
+    rhos = []
     e_s = 15
     e_f = 5
 
     def f1(num_failure, num_success, global_best):
-        rho = None
-        if len(rhos) == 1:
-            rho = rhos[-1]
+        if len(rhos) == 0:
+            rhos.append(1.0)
         elif num_success > e_s:
             rhos.append(2*rhos[-1])
-            rho = rhos[-1]
         elif num_failure > e_f:
             rhos.append(0.5*rhos[-1])
-            rho = rhos[-1]
         else:
             rhos.append(rhos[-1])
-            rho = rhos[-1]
+
+        rho = rhos[-1]
 
         def f2(p_v, p_pos, p_best):
             if tuple(p_pos) != tuple(global_best):
