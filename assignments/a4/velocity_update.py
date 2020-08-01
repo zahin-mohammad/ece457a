@@ -6,9 +6,9 @@ import math
 def inertia_velocity(
     w,
     c1, c2,
-    r1, r2,
 ):
     def f(particle, global_best):
+        r1, r2 = np.random.uniform(0, 1, 2)
         return w*particle.velocity \
             + c1*r1*(particle.p_best - particle.position) \
             + c2*r2*(global_best - particle.position)
@@ -28,4 +28,15 @@ def constriction_velocity(
                   + c1*r1*(p_best - p_pos)
                   + c2*r2*(global_best - p_pos))
 
+    return f
+
+
+def simple_velocity(
+    c1, c2
+):
+    def f(particle, global_best):
+        r1, r2 = np.random.uniform(0, 1, 2)
+        return particle.velocity \
+            + c1*r1*(particle.p_best - particle.position) \
+            + c2*r2*(global_best - particle.position)
     return f
