@@ -6,7 +6,7 @@ from plot import graph
 
 
 x_y_range = (-5.0, 5.0)
-iterations = 1000
+iterations = 200
 particle_count = 100
 
 
