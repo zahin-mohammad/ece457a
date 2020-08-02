@@ -6,9 +6,9 @@ import numpy as np
 from six_multiplexer import fitness
 import time
 
-num_individuals = 700
-max_depth = 8
-generation_count = 200
+num_individuals = 1000
+max_depth = 5
+generation_count = 10000
 survivor_count = 2
 p_m = 0.05
 x = 0.5
