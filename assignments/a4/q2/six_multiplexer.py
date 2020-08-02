@@ -44,3 +44,8 @@ def result(a0, a1, d0, d1, d2, d3):
         }
     }
     return six_multiplexer_map[a0][a1]
+
+
+def update_fitness(population):
+    for i in range(len(population)):
+        population[i].fitness = fitness(population[i])
