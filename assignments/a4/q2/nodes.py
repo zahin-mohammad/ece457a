@@ -79,10 +79,10 @@ class Terminal(Node):
     def __init__(self,
                  depth=None,
                  max_depth=None,
-                 children=[np.random.choice(VARS)],
+                 children=[None],
                  debug=False):
         super().__init__(debug=debug)
-        self.children = children
+        self.children = [np.random.choice(VARS)]
 
     def evaluate(self, inputs):
         return inputs[self.children[0]]

@@ -1,13 +1,12 @@
 import time
 import sys
-import matplotlib.pyplot as plt
 
 
 def simulation(
     generation_count,
     init_population,
     parent_selection,
-    mutation_or_crossover,
+    variation,
     survivor_selection,
     best_of_generation,
     debug=False
@@ -17,8 +16,8 @@ def simulation(
     for i in range(generation_count):
         start = time.time()
         parents = parent_selection(population)
-        children = mutation_or_crossover(parents)
-        population = survivor_selection(children, population)
+        variation(parents)
+        population = survivor_selection(parents, population)
         best_fitness, best_individual = best_of_generation(population)
         best_per_generation.append(best_fitness)
         end = time.time()

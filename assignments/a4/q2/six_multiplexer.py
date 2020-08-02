@@ -3,19 +3,19 @@ import math
 VARS = ["a0", "a1", "d0", "d1", "d2", "d3"]
 
 
-def fitness(program):
+def fitness(individual):
     all_binary_strings = generate_binary_strings(len(VARS))
 
     correct = 0
-    wrong = 0
+    total = 0
 
     for binary_string in all_binary_strings:
         inputs = {var: int(c) for var, c in zip(VARS, binary_string)}
-        if result(**inputs) == program.evaluate(inputs):
+        if result(**inputs) == individual.program.evaluate(inputs):
             correct += 1
-        else:
-            wrong += 1
-    return correct, wrong
+        total += 1
+    individual.fitness = correct/total
+    return individual.fitness
 
 
 def generate_binary_strings(n):
