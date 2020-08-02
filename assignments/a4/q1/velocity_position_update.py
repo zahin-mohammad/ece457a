@@ -9,6 +9,13 @@ import math
     layer 3: particle data
 '''
 
+# TODO: pass in range
+
+
+def bound(pos, x_range=[-5, -5], y_range=[5, 5]):
+    # return np.clip(x_range, x_range, y_range)
+    return pos
+
 
 def inertia_velocity(
     w,
@@ -21,7 +28,7 @@ def inertia_velocity(
                 + c1*r1*(p_best - p_pos) \
                 + c2*r2*(global_best - p_pos)
             n_position = p_pos + n_velocity
-            return n_velocity, n_position
+            return n_velocity, bound(n_position)
         return f2
     return f1
 
@@ -39,7 +46,7 @@ def constriction_velocity(
                             + c1*r1*(p_best - p_pos)
                             + c2*r2*(global_best - p_pos))
             n_position = p_pos + n_velocity
-            return n_velocity, n_position
+            return n_velocity, bound(n_position)
         return f2
     return f1
 
@@ -54,7 +61,7 @@ def simple_velocity(
                 + c1*r1*(p_best - p_pos) \
                 + c2*r2*(global_best - p_pos)
             n_position = p_pos + n_velocity
-            return n_velocity, n_position
+            return n_velocity, bound(n_position)
         return f2
     return f1
 
@@ -86,6 +93,6 @@ def guaranteed_convergence_velocity(
             r2 = np.random.uniform()
             n_velocity = w*p_v + rho*(1-2*r2)
             n_position = global_best + w*p_v + rho*(1-2*r2)
-            return n_velocity, n_position
+            return n_velocity, bound(n_position)
         return f2
     return f1
