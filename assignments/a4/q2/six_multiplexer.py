@@ -13,7 +13,10 @@ def fitness(program):
         inputs = {var: int(c) for var, c in zip(VARS, binary_string)}
         if result(**inputs) == program.evaluate(inputs):
             correct += 1
+        else:
+            print(f'{result(**inputs)} vs {program.evaluate(inputs)}')
         total += 1
+
     return correct/total
 
 
