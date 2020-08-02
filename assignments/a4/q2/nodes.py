@@ -8,13 +8,14 @@ class And(Node):
     def __init__(self,
                  depth,
                  max_depth,
+                 full_mode,
                  children=None,
                  debug=False):
-        super().__init__(children, depth, max_depth)
+        super().__init__(children, depth, max_depth, full_mode)
 
         if self.children is None:
             self.children = random_children(
-                2, depth, max_depth) if depth < max_depth else [Terminal(depth+1, max_depth) for i in range(2)]
+                2, depth, max_depth, full_mode) if depth < max_depth else [Terminal(depth+1, max_depth, full_mode) for i in range(2)]
 
     def evaluate(self, inputs):
         return self.children[0].evaluate(inputs) and self.children[1].evaluate(inputs)
@@ -26,6 +27,7 @@ class And(Node):
         return And(
             depth=self.depth,
             max_depth=self.max_depth,
+            full_mode=self.full_mode,
             children=[child.copy() for child in self.children])
 
 
@@ -33,13 +35,14 @@ class Or(Node):
     def __init__(self,
                  depth,
                  max_depth,
+                 full_mode,
                  children=None,
                  debug=False):
-        super().__init__(children, depth, max_depth)
+        super().__init__(children, depth, max_depth, full_mode)
 
         if self.children is None:
             self.children = random_children(
-                2, depth, max_depth) if depth < max_depth else [Terminal(depth+1, max_depth) for i in range(2)]
+                2, depth, max_depth, full_mode) if depth < max_depth else [Terminal(depth+1, max_depth, full_mode) for i in range(2)]
 
     def evaluate(self, inputs):
         return self.children[0].evaluate(inputs) or self.children[1].evaluate(inputs)
@@ -51,6 +54,7 @@ class Or(Node):
         return Or(
             depth=self.depth,
             max_depth=self.max_depth,
+            full_mode=self.full_mode,
             children=[child.copy() for child in self.children])
 
 
@@ -58,13 +62,14 @@ class If(Node):
     def __init__(self,
                  depth,
                  max_depth,
+                 full_mode,
                  children=None,
                  debug=False):
-        super().__init__(children, depth, max_depth)
+        super().__init__(children, depth, max_depth, full_mode)
 
         if self.children is None:
             self.children = random_children(
-                3, depth, max_depth) if depth < max_depth else [Terminal(depth+1, max_depth) for i in range(3)]
+                3, depth, max_depth, full_mode) if depth < max_depth else [Terminal(depth+1, max_depth, full_mode) for i in range(3)]
 
     def evaluate(self, inputs):
         return self.children[0].evaluate(inputs) if self.children[1].evaluate(inputs) else self.children[2].evaluate(inputs)
@@ -76,6 +81,7 @@ class If(Node):
         return If(
             depth=self.depth,
             max_depth=self.max_depth,
+            full_mode=self.full_mode,
             children=[child.copy() for child in self.children])
 
 
@@ -83,13 +89,14 @@ class Not(Node):
     def __init__(self,
                  depth,
                  max_depth,
+                 full_mode,
                  children=None,
                  debug=False):
-        super().__init__(children, depth, max_depth)
+        super().__init__(children, depth, max_depth, full_mode)
 
         if self.children is None:
             self.children = random_children(
-                1, depth, max_depth) if depth < max_depth else [Terminal(depth+1, max_depth)]
+                1, depth, max_depth, full_mode) if depth < max_depth else [Terminal(depth+1, max_depth, full_mode)]
 
     def evaluate(self, inputs):
         return not self.children[0].evaluate(inputs)
@@ -101,6 +108,7 @@ class Not(Node):
         return Not(
             depth=self.depth,
             max_depth=self.max_depth,
+            full_mode=self.full_mode,
             children=[child.copy() for child in self.children])
 
 
@@ -108,9 +116,10 @@ class Terminal(Node):
     def __init__(self,
                  depth,
                  max_depth,
+                 full_mode,
                  children=[None],
                  debug=False):
-        super().__init__(children, depth, max_depth)
+        super().__init__(children, depth, max_depth, full_mode)
 
         self.children = [np.random.choice(VARS)]
 
@@ -124,12 +133,15 @@ class Terminal(Node):
         return Terminal(
             depth=self.depth,
             max_depth=self.max_depth,
+            full_mode=self.full_mode,
             children=self.children
-        )  # Don't need to regen Terminal Nodes because they don't add depth
+        )
 
 
 T_UNION_F = [And, Or, If, Not, Terminal]
+F = [And, Or, If, Not]
 
 
-def random_children(i, depth, max_depth):
-    return [node(depth+1, max_depth) for node in np.random.choice(T_UNION_F, size=i)]
+def random_children(i, depth, max_depth, full_mode):
+    function_set = F if full_mode else T_UNION_F
+    return [node(depth+1, max_depth, full_mode) for node in np.random.choice(function_set, size=i)]
