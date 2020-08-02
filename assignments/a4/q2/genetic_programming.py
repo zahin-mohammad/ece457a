@@ -28,6 +28,8 @@ def simulation(
             print(f'\tFitness:{best_fitness}')
             print(f'\tTook: {time.time() - start} s')
             print(f'\tPop-size: {len(population)}')
+        if best_fitness == 1.0:
+            break
     if debug:
         print(f"Simulation finished in : {time.time() - sim_start}")
     return best_per_generation

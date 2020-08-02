@@ -1,20 +1,18 @@
 import math
 
 VARS = ["a0", "a1", "d0", "d1", "d2", "d3"]
+all_binary_strings = ['000000', '000001', '000010', '000011', '000100', '000101', '000110', '000111', '001000', '001001', '001010', '001011', '001100', '001101', '001110', '001111', '010000', '010001', '010010', '010011', '010100', '010101', '010110', '010111', '011000', '011001', '011010', '011011', '011100', '011101', '011110', '011111',
+                      '100000', '100001', '100010', '100011', '100100', '100101', '100110', '100111', '101000', '101001', '101010', '101011', '101100', '101101', '101110', '101111', '110000', '110001', '110010', '110011', '110100', '110101', '110110', '110111', '111000', '111001', '111010', '111011', '111100', '111101', '111110', '111111']
 
 
 def fitness(program):
-    all_binary_strings = generate_binary_strings(len(VARS))
-
     correct = 0
     total = 0
 
     for binary_string in all_binary_strings:
         inputs = {var: int(c) for var, c in zip(VARS, binary_string)}
-        if result(**inputs) == program.evaluate(inputs):
+        if bool(result(**inputs)) == program.evaluate(inputs):
             correct += 1
-        else:
-            print(f'{result(**inputs)} vs {program.evaluate(inputs)}')
         total += 1
 
     return correct/total
@@ -46,3 +44,8 @@ def result(a0, a1, d0, d1, d2, d3):
         }
     }
     return six_multiplexer_map[a0][a1]
+
+
+if __name__ == "__main__":
+    bin_arr = generate_binary_strings(6)
+    print(bin_arr)

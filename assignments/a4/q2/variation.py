@@ -8,32 +8,32 @@ def variation(
         p_m=0):
     def f(individuals):
         # Don't modify population
-        population = [individual.copy() for individual in individuals]
+        np.random.shuffle(individuals)
+        intermediate_pool = []
 
-        if np.random.uniform() < p_m:
-            population = mutate_pop(population)
-        else:
-            population = crossover_pop(population)
+        while len(intermediate_pool) < len(individuals):
+            i = len(intermediate_pool)
+            if np.random.uniform() < p_m:
+                p = mutate_program(
+                    individuals[i].program.copy())
+                intermediate_pool.append(Individual(
+                    program=p,
+                    max_depth=individuals[i].max_depth))
+            else:
+                # Wrap around if at end
+                a_index = i
+                b_index = i+1 if i != len(individuals)-1 else 0
 
-        # Update Fitness
-        for i in range(len(population)):
-            population[i].fitness = fitness(population[i].program)
-        return population
+                p_a, p_b = crossover_program(
+                    individuals[a_index].program.copy(), individuals[b_index].program.copy())
+                intermediate_pool.append(Individual(
+                    program=p_a,
+                    max_depth=individuals[a_index].max_depth))
+                intermediate_pool.append(Individual(
+                    program=p_b,
+                    max_depth=individuals[b_index].max_depth))
+        return intermediate_pool
     return f
-
-
-def crossover_pop(population):
-    np.random.shuffle(population)
-    for i in range(1, len(population), 2):
-        population[i-1].program, population[i].program = crossover_program(
-            population[i-1].program, population[i].program)
-    return population
-
-
-def mutate_pop(population):
-    for i in range(len(population)):
-        population[i].program = mutate_program(population[i].program)
-    return population
 
 
 def crossover_program(a, b):

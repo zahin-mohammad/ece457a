@@ -124,7 +124,7 @@ class Terminal(Node):
         self.children = [np.random.choice(VARS)]
 
     def evaluate(self, inputs):
-        return inputs[self.children[0]]
+        return bool(inputs[self.children[0]])
 
     def to_string(self):
         return f"({self.children[0]})"
