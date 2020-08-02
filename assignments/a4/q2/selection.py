@@ -3,20 +3,37 @@ import numpy as np
 import heapq
 
 
-def parent_selection(x):
-    def f(individuals):
-        for i in range(len(individuals)):
-            individuals[i].fitness = fitness(individuals[i])
+def parent_selection(x=0.5):
+    def f(population):
+        # TODO: Change this once it works
+        x_count = min(int(np.round(x * len(population))), len(population))
 
-        x_count = int(x*len(individuals))
+        population = sorted(
+            population, key=lambda program: program.fitness, reverse=True)
 
-        fitnesses = np.array([individual.fitness
-                              for individual in individuals])
-        selection_prob = fitnesses / fitnesses.sum()
-        # Spin roulette wheel until we get population size number of individuals
-        new_gen = [individuals[i] for i in np.random.choice(
-            len(individuals), len(individuals), p=selection_prob)]
-        return new_gen
+        group1 = population[:x_count]
+        group2 = population[x_count:]
+
+        group1_total_fitness = sum([program.fitness for program in group1])
+        group2_total_fitness = sum([program.fitness for program in group2])
+
+        group1_pick_probs = [program.fitness /
+                             group1_total_fitness for program in group1]
+
+        group2_pick_probs = [program.fitness /
+                             group2_total_fitness for program in group2]
+
+        parents = []
+
+        # 80% from best x% of population
+        # 20% from best (100-x)% of population
+        for _ in range(len(population)):
+            group, pick_probs = [(group1, group1_pick_probs), (group2,
+                                                               group2_pick_probs)][np.random.choice([0, 1], p=[0.8, 0.2])]
+
+            parents.append((np.random.choice(group, p=pick_probs)).copy())
+
+        return parents
     return f
 
 

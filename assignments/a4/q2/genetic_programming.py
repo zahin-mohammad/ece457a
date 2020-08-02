@@ -1,5 +1,4 @@
 import time
-import sys
 
 
 def simulation(
@@ -11,23 +10,24 @@ def simulation(
     best_of_generation,
     debug=False
 ):
-    population = init_population()
-    best_per_generation = []
+    sim_start = time.time()
+
+    population, best_per_generation = init_population(), []
+    if debug:
+        print(f"Init took: {time.time() - sim_start} s")
     for i in range(generation_count):
         start = time.time()
 
-        parents = parent_selection(population)
-
-        children = variation(parents)
-
-        population = survivor_selection(children, population)
+        population = survivor_selection(
+            variation(parent_selection(population)), population)
         best_fitness, _ = best_of_generation(population)
-
         best_per_generation.append(best_fitness)
-        end = time.time()
-        if debug:
-            print(
-                f'For gen: {i+1} fitness:{best_fitness} took: {end-start} s', flush=True)
-            print(f'\tpop-size: {len(population)}')
 
+        if debug:
+            print(f'Gen: {i+1}/{generation_count}')
+            print(f'\tFitness:{best_fitness}')
+            print(f'\tTook: {time.time() - start} s')
+            print(f'\tPop-size: {len(population)}')
+    if debug:
+        print(f"Simulation finished in : {time.time() - sim_start}")
     return best_per_generation

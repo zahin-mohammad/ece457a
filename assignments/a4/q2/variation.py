@@ -5,39 +5,43 @@ from six_multiplexer import fitness
 
 
 def variation(
-        p_m=0,
-        internal_p=1.0):
+        p_m=0):
     def f(individuals):
-        new_pop = []
+        # Don't modify population
+        population = [individual.copy() for individual in individuals]
+
         if np.random.uniform() < p_m:
-            new_pop = mutate_pop(individuals)
+            population = mutate_pop(population)
         else:
-            new_pop = crossover_pop(individuals)
-        for i in range(len(new_pop)):
-            new_pop[i].fitness = fitness(new_pop[i])
-        return new_pop
+            population = crossover_pop(population)
+
+        # Update Fitness
+        for i in range(len(population)):
+            population[i].fitness = fitness(population[i].program)
+        return population
     return f
 
 
 def crossover_pop(population):
-    new_pop = []
     np.random.shuffle(population)
     for i in range(1, len(population), 2):
-        program_a, program_b = crossover_program(
+        population[i-1].program, population[i].program = crossover_program(
             population[i-1].program, population[i].program)
-        new_pop.append(Individual(program=program_a))
-        new_pop.append(Individual(program=program_b))
-    return new_pop
+    return population
 
 
-def crossover_program(program_a_old, program_b_old):
-    # Need a deep copy or else there will be loops in the AST
-    a = program_a_old.copy()
-    b = program_b_old.copy()
+def mutate_pop(population):
+    for i in range(len(population)):
+        population[i].program = mutate_program(population[i].program)
+    return population
 
-    nodes_a = program_to_list(a)
-    nodes_b = program_to_list(b)
 
+def crossover_program(a, b):
+    nodes_a, nodes_b = program_to_list(a), program_to_list(b)
+    np.random.shuffle(nodes_a)
+    np.random.shuffle(nodes_b)
+
+    # replace rand_node_x (child) from parent_x
     parent_a, rand_node_a = nodes_a[np.random.choice(len(nodes_a))]
     parent_b, rand_node_b = nodes_b[np.random.choice(len(nodes_b))]
 
@@ -53,17 +57,10 @@ def crossover_program(program_a_old, program_b_old):
     return a, b
 
 
-def mutate_pop(individuals):
-    new_pop = []
-    for i in range(len(individuals)):
-        program_a = mutate_program(individuals[i].program)
-        new_pop.append(Individual(program=program_a))
-    return new_pop
-
-
-def mutate_program(p):
-    a = p.copy()
+def mutate_program(a):
     nodes_a = program_to_list(a)
+    np.random.shuffle(nodes_a)
+
     parent_a, rand_node_a = nodes_a[np.random.choice(len(nodes_a))]
     new_node = random_node(
         depth=rand_node_a.depth,
@@ -78,9 +75,10 @@ def mutate_program(p):
     return a
 
 
-def program_to_list(program):
+def program_to_list(root_node):
     nodes = []
-    queue = [(None, program)]
+    queue = [(None, root_node)]
+
     while len(queue) > 0:
         parent, node = queue.pop()
         nodes.append((parent, node))
@@ -89,3 +87,9 @@ def program_to_list(program):
         for child in node.children:
             queue.append((node, child))
     return nodes
+
+# def node_collector(nodes, node: ProgramTreeNode, parent: ProgramTreeNode = None):
+#     nodes.append((node, parent))
+
+#     for child in node.children:
+#         node_collector(nodes, child, node)

@@ -3,7 +3,7 @@ import math
 VARS = ["a0", "a1", "d0", "d1", "d2", "d3"]
 
 
-def fitness(individual):
+def fitness(program):
     all_binary_strings = generate_binary_strings(len(VARS))
 
     correct = 0
@@ -11,7 +11,7 @@ def fitness(individual):
 
     for binary_string in all_binary_strings:
         inputs = {var: int(c) for var, c in zip(VARS, binary_string)}
-        if result(**inputs) == individual.program.evaluate(inputs):
+        if result(**inputs) == program.evaluate(inputs):
             correct += 1
         total += 1
     return correct/total
