@@ -167,6 +167,6 @@ def q_one_four():
     print(f"\t best x,y: {g_best[0]} {g_best[1]}")
 
 
-# for fn in [q_one_one, q_one_two, q_one_three, q_one_four]:
-#     fn()
-q_one_four()
+for fn in [q_one_one, q_one_two, q_one_three, q_one_four]:
+    fn()
+# q_one_four()
