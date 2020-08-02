@@ -3,17 +3,21 @@ import numpy as np
 import heapq
 
 
-def parent_selection(individuals):
-    for i in range(len(individuals)):
-        individuals[i].fitness = fitness(individuals[i])
+def parent_selection(x):
+    def f(individuals):
+        for i in range(len(individuals)):
+            individuals[i].fitness = fitness(individuals[i])
 
-    fitnesses = np.array([individual.fitness
-                          for individual in individuals])
-    selection_prob = fitnesses / fitnesses.sum()
-    # Spin roulette wheel until we get population size number of individuals
-    new_gen = [individuals[i] for i in np.random.choice(
-        len(individuals), len(individuals), p=selection_prob)]
-    return new_gen
+        x_count = int(x*len(individuals))
+
+        fitnesses = np.array([individual.fitness
+                              for individual in individuals])
+        selection_prob = fitnesses / fitnesses.sum()
+        # Spin roulette wheel until we get population size number of individuals
+        new_gen = [individuals[i] for i in np.random.choice(
+            len(individuals), len(individuals), p=selection_prob)]
+        return new_gen
+    return f
 
 
 def survivor_selection(population_size, survival_count):
