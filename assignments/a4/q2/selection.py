@@ -4,7 +4,10 @@ import heapq
 
 
 def parent_selection(individuals):
-    fitnesses = np.array([fitness(individual)
+    for i in range(len(individuals)):
+        individuals[i].fitness = fitness(individuals[i])
+
+    fitnesses = np.array([individual.fitness
                           for individual in individuals])
     selection_prob = fitnesses / fitnesses.sum()
     # Spin roulette wheel until we get population size number of individuals
@@ -19,11 +22,11 @@ def survivor_selection(population_size, survival_count):
         # remove survivor count number of worst individuals from new pop and
         # replace with survivor count of best individuaLS old pop
         return heapq.nsmallest(
-            population_size - survival_count, next_generation, key=lambda x: fitness(x)) + heapq.nlargest(
-            survival_count, current_generation, lambda x: fitness(x))
+            population_size - survival_count, next_generation, key=lambda x: x.fitness) + heapq.nlargest(
+            survival_count, current_generation, lambda x: x.fitness)
     return f
 
 
 def best_of_generation(population):
-    best_individual = max(population, key=lambda x: fitness(x))
-    return fitness(best_individual), best_individual.program.to_string()
+    best_individual = max(population, key=lambda x: x.fitness)
+    return best_individual.fitness, best_individual.program.to_string()

@@ -145,3 +145,11 @@ F = [And, Or, If, Not]
 def random_children(i, depth, max_depth, full_mode):
     function_set = F if full_mode else T_UNION_F
     return [node(depth+1, max_depth, full_mode) for node in np.random.choice(function_set, size=i)]
+
+
+def random_node(depth, max_depth, full_mode):
+    function_set = F if full_mode else T_UNION_F
+    return (np.random.choice(function_set))(
+        depth=depth,
+        max_depth=max_depth,
+        full_mode=full_mode)

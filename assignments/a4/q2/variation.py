@@ -1,16 +1,21 @@
 import numpy as np
 from individual import Individual
 from nodes import *
+from six_multiplexer import fitness
 
 
 def variation(
         p_m=0,
         internal_p=1.0):
     def f(individuals):
+        new_pop = []
         if np.random.uniform() < p_m:
-            return mutate_pop(individuals)
+            new_pop = mutate_pop(individuals)
         else:
-            return crossover_pop(individuals)
+            new_pop = crossover_pop(individuals)
+        for i in range(len(new_pop)):
+            new_pop[i].fitness = fitness(new_pop[i])
+        return new_pop
     return f
 
 
@@ -60,12 +65,16 @@ def mutate_program(p):
     a = p.copy()
     nodes_a = program_to_list(a)
     parent_a, rand_node_a = nodes_a[np.random.choice(len(nodes_a))]
+    new_node = random_node(
+        depth=rand_node_a.depth,
+        max_depth=rand_node_a.max_depth,
+        full_mode=rand_node_a.full_mode
+    )
     if parent_a is None:
-        a = (
-            np.random.choice(T_UNION_F))(rand_node_a.depth, rand_node_a.max_depth)
+        a = new_node
     else:
-        parent_a.children[parent_a.children.index(rand_node_a)] = (
-            np.random.choice(T_UNION_F))(rand_node_a.depth, rand_node_a.max_depth)
+        # Generate a new sub tree with same depth params
+        parent_a.children[parent_a.children.index(rand_node_a)] = new_node
     return a
 
 
