@@ -14,8 +14,7 @@ def fitness(individual):
         if result(**inputs) == individual.program.evaluate(inputs):
             correct += 1
         total += 1
-    individual.fitness = correct/total
-    return individual.fitness
+    return correct/total
 
 
 def generate_binary_strings(n):
@@ -44,8 +43,3 @@ def result(a0, a1, d0, d1, d2, d3):
         }
     }
     return six_multiplexer_map[a0][a1]
-
-
-def update_fitness(population):
-    for i in range(len(population)):
-        population[i].fitness = fitness(population[i])

@@ -1,15 +1,13 @@
 
 class Node:
-    def __init__(self,
-                 num_params=0,
-                 debug=False):
-        self.children = []
-        self.debug = debug
-        self.num_params = num_params
-        pass
+    def __init__(self, children, depth, max_depth):
+        self.children, self.depth, self.max_depth = children, depth, max_depth
 
     def evaluate(self):
-        pass
+        assert False, "Not Implemented"
 
     def to_string(self):
-        print("TODO")
+        assert False, "Not Implemented"
+
+    def copy(self):
+        assert False, "Not Implemented"
