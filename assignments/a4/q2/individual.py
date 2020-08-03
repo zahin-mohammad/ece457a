@@ -1,6 +1,7 @@
 from nodes import *
 import numpy as np
 from six_multiplexer import fitness
+from ete3 import Tree, TreeStyle, TextFace, TreeNode
 
 
 class Individual:
@@ -28,6 +29,10 @@ class Individual:
 
 
 if __name__ == "__main__":
-    p = [Individual(5) for i in range(10)]
-    for i in p:
-        print(i.program.to_string())
+    i = Individual(max_depth=3)
+    t = i.program.to_tree_node()
+
+    ts = TreeStyle()
+    ts.show_leaf_name = False
+    ts.rotation = 90
+    t.show(tree_style=ts)

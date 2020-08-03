@@ -2,6 +2,7 @@ from node_interface import Node
 import random
 import numpy as np
 from six_multiplexer import VARS
+from ete3 import Tree, TreeStyle, TextFace, TreeNode
 
 
 class And(Node):
@@ -30,6 +31,15 @@ class And(Node):
             full_mode=self.full_mode,
             children=[child.copy() for child in self.children])
 
+    def to_tree_node(self):
+        t = Tree("AND;", format=1)
+        for child in self.children:
+            t.add_child(child.to_tree_node())
+        tf = TextFace("AND")
+        tf.rotation = -90
+        t.add_face(tf, column=1, position="branch-top")
+        return t
+
 
 class Or(Node):
     def __init__(self,
@@ -56,6 +66,15 @@ class Or(Node):
             max_depth=self.max_depth,
             full_mode=self.full_mode,
             children=[child.copy() for child in self.children])
+
+    def to_tree_node(self):
+        t = Tree("OR;", format=1)
+        for child in self.children:
+            t.add_child(child.to_tree_node())
+        tf = TextFace("OR")
+        tf.rotation = -90
+        t.add_face(tf, column=1, position="branch-top")
+        return t
 
 
 class If(Node):
@@ -84,6 +103,15 @@ class If(Node):
             full_mode=self.full_mode,
             children=[child.copy() for child in self.children])
 
+    def to_tree_node(self):
+        t = Tree("IF;", format=1)
+        for child in self.children:
+            t.add_child(child.to_tree_node())
+        tf = TextFace("IF")
+        tf.rotation = -90
+        t.add_face(tf, column=1, position="branch-top")
+        return t
+
 
 class Not(Node):
     def __init__(self,
@@ -111,6 +139,15 @@ class Not(Node):
             full_mode=self.full_mode,
             children=[child.copy() for child in self.children])
 
+    def to_tree_node(self):
+        t = Tree("NOT;", format=1)
+        for child in self.children:
+            t.add_child(child.to_tree_node())
+        tf = TextFace("NOT")
+        tf.rotation = -90
+        t.add_face(tf, column=1, position="branch-top")
+        return t
+
 
 class Terminal(Node):
     def __init__(self,
@@ -136,6 +173,13 @@ class Terminal(Node):
             full_mode=self.full_mode,
             children=self.children
         )
+
+    def to_tree_node(self):
+        t = Tree(f"{self.children[0]};", format=1)
+        tf = TextFace(f"{self.children[0]}")
+        tf.rotation = -90
+        t.add_face(tf, column=1, position="branch-bottom")
+        return t
 
 
 T_UNION_F = [And, Or, If, Not, Terminal]
