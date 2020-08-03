@@ -13,7 +13,7 @@ def simulation(
 ):
     sim_start = time.time()
 
-    population, best_per_generation = init_population(), []
+    population, best_per_generation, best_individual = init_population(), [], None
     if debug:
         print(f"Init took: {time.time() - sim_start} s")
     for i in range(generation_count):
@@ -21,7 +21,8 @@ def simulation(
 
         population = survivor_selection(
             variation(parent_selection(population)), population)
-        best_per_generation.append(best_of_generation(population))
+        best_individual = best_of_generation(population)
+        best_per_generation.append(best_individual.fitness)
 
         if debug:
             print(f'Gen: {i+1}/{generation_count}')
