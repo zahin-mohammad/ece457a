@@ -29,10 +29,12 @@ class Individual:
 
 
 if __name__ == "__main__":
-    i = Individual(max_depth=3)
+    i = Individual(max_depth=4)
     t = i.program.to_tree_node()
 
     ts = TreeStyle()
     ts.show_leaf_name = False
+    ts.show_scale = False
     ts.rotation = 90
-    t.show(tree_style=ts)
+    t.render("example.png", tree_style=ts)
+    # t.show(tree_style=ts)
