@@ -6,8 +6,7 @@ from six_multiplexer import fitness
 class Individual:
     def __init__(self, program=None, max_depth=None, f=None):
         self.program = program
-        self.max_depth = 2 if max_depth is None or max_depth <= 3 else np.random.choice(
-            range(2, max_depth))
+        self.max_depth = max_depth
 
         self.full_mode = max_depth % 2
         if self.program is None:
