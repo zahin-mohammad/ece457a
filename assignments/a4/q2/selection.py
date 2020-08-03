@@ -1,4 +1,3 @@
-from six_multiplexer import fitness
 import numpy as np
 import heapq
 
