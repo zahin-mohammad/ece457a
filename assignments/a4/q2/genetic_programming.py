@@ -20,15 +20,14 @@ def simulation(
 
         population = survivor_selection(
             variation(parent_selection(population)), population)
-        best_fitness, _ = best_of_generation(population)
-        best_per_generation.append(best_fitness)
+        best_per_generation.append(best_of_generation(population))
 
         if debug:
             print(f'Gen: {i+1}/{generation_count}')
-            print(f'\tFitness:{best_fitness}')
+            print(f'\tFitness:{best_per_generation[-1]}')
             print(f'\tTook: {time.time() - start} s')
             print(f'\tPop-size: {len(population)}')
-        if best_fitness == 1.0:
+        if best_per_generation[-1] == 1.0:
             break
     if debug:
         print(f"Simulation finished in : {time.time() - sim_start}")

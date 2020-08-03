@@ -42,6 +42,7 @@ def crossover_program(a, b):
     np.random.shuffle(nodes_b)
 
     # replace rand_node_x (child) from parent_x
+    # Each node equally likely to get swapped
     parent_a, rand_node_a = nodes_a[np.random.choice(len(nodes_a))]
     parent_b, rand_node_b = nodes_b[np.random.choice(len(nodes_b))]
 
@@ -62,16 +63,17 @@ def mutate_program(a):
     np.random.shuffle(nodes_a)
 
     parent_a, rand_node_a = nodes_a[np.random.choice(len(nodes_a))]
+    # Generate a new sub tree with same depth params
     new_node = random_node(
         depth=rand_node_a.depth,
         max_depth=rand_node_a.max_depth,
         full_mode=rand_node_a.full_mode
     )
-    if parent_a is None:
-        a = new_node
-    else:
-        # Generate a new sub tree with same depth params
+
+    if parent_a:
         parent_a.children[parent_a.children.index(rand_node_a)] = new_node
+    else:
+        a = new_node
     return a
 
 
@@ -87,9 +89,3 @@ def program_to_list(root_node):
         for child in node.children:
             queue.append((node, child))
     return nodes
-
-# def node_collector(nodes, node: ProgramTreeNode, parent: ProgramTreeNode = None):
-#     nodes.append((node, parent))
-
-#     for child in node.children:
-#         node_collector(nodes, child, node)

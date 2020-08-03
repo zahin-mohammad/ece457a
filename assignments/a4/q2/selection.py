@@ -49,5 +49,4 @@ def survivor_selection(population_size, survival_count):
 
 
 def best_of_generation(population):
-    best_individual = max(population, key=lambda x: x.fitness)
-    return best_individual.fitness, best_individual.program.to_string()
+    return (max(population, key=lambda x: x.fitness)).fitness
