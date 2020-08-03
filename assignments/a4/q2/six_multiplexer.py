@@ -17,7 +17,7 @@ def max_program_depth(program):
 
 
 def fitness(program):
-    if max_program_depth(program) > 8:
+    if max_program_depth(program) > 4:
         return 0
     correct = 0
 
@@ -54,7 +54,7 @@ def result(a0, a1, d0, d1, d2, d3):
             1: d3
         }
     }
-    return six_multiplexer_map[a0][a1]
+    return six_multiplexer_map[int(a0)][int(a1)]
 
 
 if __name__ == "__main__":
