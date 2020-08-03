@@ -7,7 +7,7 @@ from six_multiplexer import fitness
 import time
 
 num_individuals = 1000
-max_depth = 8
+max_depth = 3
 generation_count = 10000
 survivor_count = 50
 p_m = 0.05
