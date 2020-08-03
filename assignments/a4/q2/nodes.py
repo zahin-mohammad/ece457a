@@ -24,13 +24,6 @@ class And(Node):
     def to_string(self):
         return f"({self.children[0].to_string()} AND {self.children[1].to_string()})"
 
-    def copy(self):
-        return And(
-            depth=self.depth,
-            max_depth=self.max_depth,
-            full_mode=self.full_mode,
-            children=[child.copy() for child in self.children])
-
     def to_tree_node(self):
         t = Tree("AND;", format=1)
         for child in self.children:
@@ -39,6 +32,13 @@ class And(Node):
         tf.rotation = -90
         t.add_face(tf, column=1, position="branch-top")
         return t
+
+    def copy(self):
+        return And(
+            depth=self.depth,
+            max_depth=self.max_depth,
+            full_mode=self.full_mode,
+            children=[child.copy() for child in self.children])
 
 
 class Or(Node):
@@ -60,13 +60,6 @@ class Or(Node):
     def to_string(self):
         return f"({self.children[0].to_string()} OR {self.children[1].to_string()})"
 
-    def copy(self):
-        return Or(
-            depth=self.depth,
-            max_depth=self.max_depth,
-            full_mode=self.full_mode,
-            children=[child.copy() for child in self.children])
-
     def to_tree_node(self):
         t = Tree("OR;", format=1)
         for child in self.children:
@@ -75,6 +68,13 @@ class Or(Node):
         tf.rotation = -90
         t.add_face(tf, column=1, position="branch-top")
         return t
+
+    def copy(self):
+        return Or(
+            depth=self.depth,
+            max_depth=self.max_depth,
+            full_mode=self.full_mode,
+            children=[child.copy() for child in self.children])
 
 
 class If(Node):
@@ -96,13 +96,6 @@ class If(Node):
     def to_string(self):
         return f"({self.children[1].to_string()} IF {self.children[0].to_string()} ELSE {self.children[2].to_string()})"
 
-    def copy(self):
-        return If(
-            depth=self.depth,
-            max_depth=self.max_depth,
-            full_mode=self.full_mode,
-            children=[child.copy() for child in self.children])
-
     def to_tree_node(self):
         t = Tree("IF;", format=1)
         for child in self.children:
@@ -111,6 +104,13 @@ class If(Node):
         tf.rotation = -90
         t.add_face(tf, column=1, position="branch-top")
         return t
+
+    def copy(self):
+        return If(
+            depth=self.depth,
+            max_depth=self.max_depth,
+            full_mode=self.full_mode,
+            children=[child.copy() for child in self.children])
 
 
 class Not(Node):
@@ -132,13 +132,6 @@ class Not(Node):
     def to_string(self):
         return f"(NOT {self.children[0].to_string()})"
 
-    def copy(self):
-        return Not(
-            depth=self.depth,
-            max_depth=self.max_depth,
-            full_mode=self.full_mode,
-            children=[child.copy() for child in self.children])
-
     def to_tree_node(self):
         t = Tree("NOT;", format=1)
         for child in self.children:
@@ -147,6 +140,13 @@ class Not(Node):
         tf.rotation = -90
         t.add_face(tf, column=1, position="branch-top")
         return t
+
+    def copy(self):
+        return Not(
+            depth=self.depth,
+            max_depth=self.max_depth,
+            full_mode=self.full_mode,
+            children=[child.copy() for child in self.children])
 
 
 class Terminal(Node):
@@ -166,6 +166,13 @@ class Terminal(Node):
     def to_string(self):
         return f"({self.children[0]})"
 
+    def to_tree_node(self):
+        t = Tree(f"{self.children[0]};", format=1)
+        tf = TextFace(f"{self.children[0]}")
+        tf.rotation = -90
+        t.add_face(tf, column=1, position="branch-bottom")
+        return t
+
     def copy(self):
         return Terminal(
             depth=self.depth,
@@ -173,13 +180,6 @@ class Terminal(Node):
             full_mode=self.full_mode,
             children=self.children
         )
-
-    def to_tree_node(self):
-        t = Tree(f"{self.children[0]};", format=1)
-        tf = TextFace(f"{self.children[0]}")
-        tf.rotation = -90
-        t.add_face(tf, column=1, position="branch-bottom")
-        return t
 
 
 T_UNION_F = [And, Or, If, Not, Terminal]
