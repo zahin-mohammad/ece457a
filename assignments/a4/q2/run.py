@@ -5,10 +5,12 @@ from variation import variation
 import numpy as np
 from six_multiplexer import fitness
 import time
+from ete3 import TreeStyle
+
 
 num_individuals = 1000
 max_depth = 3
-generation_count = 10000
+generation_count = 1000
 survivor_count = 50
 p_m = 0.05
 x = 0.5
@@ -21,7 +23,7 @@ def init_population(num_individuals, max_depth):
     return f
 
 
-simulation(
+best_pre_gen, best_individual = simulation(
     generation_count=generation_count,
     init_population=init_population(
         num_individuals=num_individuals,
@@ -37,3 +39,10 @@ simulation(
     best_of_generation=best_of_generation,
     debug=True
 )
+
+t = best_individual.program.to_tree_node()
+ts = TreeStyle()
+ts.show_leaf_name = False
+ts.show_scale = False
+ts.rotation = 90
+t.render("example.png", tree_style=ts)
