@@ -1,4 +1,5 @@
 import time
+from nodes import Terminal
 
 
 def simulation(
@@ -27,6 +28,16 @@ def simulation(
             print(f'\tFitness:{best_per_generation[-1]}')
             print(f'\tTook: {time.time() - start} s')
             print(f'\tPop-size: {len(population)}')
+
+            def dfs(n, depth):
+                if isinstance(n, Terminal):
+                    return depth + 1
+                return max([
+                    dfs(c, depth+1) for c in n.children
+                ])
+            print(
+                f'\tMax Pop Depth: {max([dfs(i.program, 0) for i in population])}')
+
         if best_per_generation[-1] == 1.0:
             break
     if debug:

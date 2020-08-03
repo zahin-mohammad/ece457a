@@ -4,7 +4,7 @@ from six_multiplexer import fitness
 
 
 class Individual:
-    def __init__(self, program=None, max_depth=None, f=None):
+    def __init__(self, max_depth, program=None, f=None):
         self.program = program
         self.max_depth = max_depth
 
@@ -25,3 +25,9 @@ class Individual:
             max_depth=self.max_depth,
             f=self.fitness
         )
+
+
+if __name__ == "__main__":
+    p = [Individual(5) for i in range(10)]
+    for i in p:
+        print(i.program.to_string())

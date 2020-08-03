@@ -72,10 +72,10 @@ class If(Node):
                 3, depth, max_depth, full_mode) if depth < max_depth else [Terminal(depth+1, max_depth, full_mode) for i in range(3)]
 
     def evaluate(self, inputs):
-        return self.children[0].evaluate(inputs) if self.children[1].evaluate(inputs) else self.children[2].evaluate(inputs)
+        return self.children[1].evaluate(inputs) if self.children[0].evaluate(inputs) else self.children[2].evaluate(inputs)
 
     def to_string(self):
-        return f"({self.children[0].to_string()} IF {self.children[1].to_string()} ELSE {self.children[2].to_string()})"
+        return f"({self.children[1].to_string()} IF {self.children[0].to_string()} ELSE {self.children[2].to_string()})"
 
     def copy(self):
         return If(

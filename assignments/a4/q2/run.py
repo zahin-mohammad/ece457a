@@ -7,27 +7,25 @@ from six_multiplexer import fitness
 import time
 
 num_individuals = 1000
-max_depth = 10
+max_depth = 8
 generation_count = 10000
-survivor_count = 2
+survivor_count = 50
 p_m = 0.05
 x = 0.5
 
 
-def init_population(num_individuals):
+def init_population(num_individuals, max_depth):
     def f():
-        start = time.time()
-        num_groups = max_depth
-        new_pop = [Individual(max_depth=1 + (i % max_depth))
-                   for i in range(num_individuals)]
-        return new_pop
+        return [Individual(max_depth=1 + (i % max_depth))
+                for i in range(num_individuals)]
     return f
 
 
 simulation(
     generation_count=generation_count,
     init_population=init_population(
-        num_individuals=num_individuals),
+        num_individuals=num_individuals,
+        max_depth=max_depth),
     parent_selection=parent_selection(
         x=x
     ),

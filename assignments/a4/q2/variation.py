@@ -25,7 +25,9 @@ def variation(
                 b_index = i+1 if i != len(individuals)-1 else 0
 
                 p_a, p_b = crossover_program(
-                    individuals[a_index].program.copy(), individuals[b_index].program.copy())
+                    individuals[a_index].program.copy(),
+                    individuals[b_index].program.copy())
+
                 intermediate_pool.append(Individual(
                     program=p_a,
                     max_depth=individuals[a_index].max_depth))
@@ -37,6 +39,7 @@ def variation(
 
 
 def crossover_program(a, b):
+    temp1 = a.to_string()
     nodes_a, nodes_b = program_to_list(a), program_to_list(b)
     np.random.shuffle(nodes_a)
     np.random.shuffle(nodes_b)
@@ -46,15 +49,17 @@ def crossover_program(a, b):
     parent_a, rand_node_a = nodes_a[np.random.choice(len(nodes_a))]
     parent_b, rand_node_b = nodes_b[np.random.choice(len(nodes_b))]
 
-    if parent_a is None:
-        a = rand_node_b
-    else:
+    if parent_a:
         parent_a.children[parent_a.children.index(rand_node_a)] = rand_node_b
-
-    if parent_b is None:
-        b = rand_node_a
     else:
+        a = rand_node_b
+
+    if parent_b:
         parent_b.children[parent_b.children.index(rand_node_b)] = rand_node_a
+    else:
+        b = rand_node_a
+
+    temp2 = a.to_string()
     return a, b
 
 
@@ -69,7 +74,6 @@ def mutate_program(a):
         max_depth=rand_node_a.max_depth,
         full_mode=rand_node_a.full_mode
     )
-
     if parent_a:
         parent_a.children[parent_a.children.index(rand_node_a)] = new_node
     else:
@@ -89,3 +93,10 @@ def program_to_list(root_node):
         for child in node.children:
             queue.append((node, child))
     return nodes
+
+
+if __name__ == "__main__":
+    variation_fn = variation()
+
+    p = [Individual(3) for i in range(10)]
+    n_p = variation_fn(variation_fn(variation_fn(p)))

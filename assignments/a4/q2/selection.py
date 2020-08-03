@@ -42,7 +42,7 @@ def survivor_selection(population_size, survival_count):
         # keep a pop of population_size always
         # remove survivor count number of worst individuals from new pop and
         # replace with survivor count of best individuaLS old pop
-        return heapq.nsmallest(
+        return heapq.nlargest(
             population_size - survival_count, next_generation, key=lambda x: x.fitness) + heapq.nlargest(
             survival_count, current_generation, lambda x: x.fitness)
     return f
