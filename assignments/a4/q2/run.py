@@ -1,11 +1,15 @@
-from genetic_programming import simulation
-from selection import *
-from individual import Individual
-from variation import variation
 import numpy as np
-from six_multiplexer import fitness
-import time
+SEED = np.random.randint(1000)
+np.random.seed(SEED)
+print(f"np SEED: {SEED}")
 from ete3 import TreeStyle
+import time
+from six_multiplexer import fitness
+from variation import variation
+from individual import Individual
+from selection import *
+from genetic_programming import simulation
+
 
 
 num_individuals = 1000
@@ -45,4 +49,4 @@ ts = TreeStyle()
 ts.show_leaf_name = False
 ts.show_scale = False
 ts.rotation = 90
-t.render("example.png", tree_style=ts)
+t.render(f"example{best_individual.fitness}.png", tree_style=ts)

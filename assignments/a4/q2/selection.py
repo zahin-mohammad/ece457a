@@ -2,7 +2,7 @@ import numpy as np
 import heapq
 
 
-def parent_selection(x=0.5):
+def parent_selection(x):
     # TODO: CHANGE THIS
     def f(population):
         gen_size = len(population)

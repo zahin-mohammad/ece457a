@@ -43,4 +43,4 @@ def simulation(
             break
     if debug:
         print(f"Simulation finished in : {time.time() - sim_start}")
-    return best_per_generation
+    return best_per_generation, best_individual

@@ -98,8 +98,11 @@ class If(Node):
 
     def to_tree_node(self):
         t = Tree("IF;", format=1)
-        for child in self.children:
-            t.add_child(child.to_tree_node())
+        # for child in self.children:
+        #     t.add_child(child.to_tree_node())
+        t.add_child(self.children[1].to_tree_node())
+        t.add_child(self.children[0].to_tree_node())
+        t.add_child(self.children[2].to_tree_node())
         tf = TextFace("IF")
         tf.rotation = -90
         t.add_face(tf, column=1, position="branch-top")
