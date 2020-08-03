@@ -3,8 +3,11 @@ import heapq
 
 
 def parent_selection(x=0.5):
+    # TODO: CHANGE THIS
     def f(population):
-        # TODO: Change this once it works
+        gen_size = len(population)
+        population = list(
+            filter(lambda program: program.fitness != 0, population))
         x_count = min(int(np.round(x * len(population))), len(population))
 
         population = sorted(
@@ -26,11 +29,12 @@ def parent_selection(x=0.5):
 
         # 80% from best x% of population
         # 20% from best (100-x)% of population
-        for _ in range(len(population)):
+        for _ in range(gen_size):
+            # TODO: Change to explicit 80/20 split instead of probability
             group, pick_probs = [(group1, group1_pick_probs), (group2,
                                                                group2_pick_probs)][np.random.choice([0, 1], p=[0.8, 0.2])]
 
-            parents.append((np.random.choice(group, p=pick_probs)).copy())
+            parents.append(np.random.choice(group, p=pick_probs))
 
         return parents
     return f
@@ -48,4 +52,4 @@ def survivor_selection(population_size, survival_count):
 
 
 def best_of_generation(population):
-    return (max(population, key=lambda x: x.fitness)).fitness
+    return (max(population, key=lambda x: x.fitness))
