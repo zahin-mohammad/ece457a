@@ -4,10 +4,10 @@ from nodes import *
 from six_multiplexer import fitness
 
 
-def variation(
-        p_m=0):
-    def f(individuals):
-        # Don't modify population
+def variation(p_m=0):
+    def f(parents):
+        # Don't modify parents
+        individuals = [parent.copy() for parent in parents]
         np.random.shuffle(individuals)
         intermediate_pool = []
 
@@ -17,7 +17,7 @@ def variation(
                 p = mutate_program(
                     individuals[i].program.copy())
                 intermediate_pool.append(Individual(
-                    program=p,
+                    program=p.copy(),
                     max_depth=individuals[i].max_depth))
             else:
                 # Wrap around if at end
@@ -29,10 +29,10 @@ def variation(
                     individuals[b_index].program.copy())
 
                 intermediate_pool.append(Individual(
-                    program=p_a,
+                    program=p_a.copy(),
                     max_depth=individuals[a_index].max_depth))
                 intermediate_pool.append(Individual(
-                    program=p_b,
+                    program=p_b.copy(),
                     max_depth=individuals[b_index].max_depth))
         return intermediate_pool
     return f
@@ -46,9 +46,20 @@ def crossover_program(a, b):
 
     # replace rand_node_x (child) from parent_x
     # Each node equally likely to get swapped
+    
     parent_a, rand_node_a = nodes_a[np.random.choice(len(nodes_a))]
     parent_b, rand_node_b = nodes_b[np.random.choice(len(nodes_b))]
-
+    while True:
+        # Do not want to replace root
+        depth_a = rand_node_a.get_max_depth()
+        depth_b = rand_node_b.get_max_depth()
+        if (parent_a == None and depth_a != 0 ) \
+            or (parent_b == None and depth_b != 0) \
+            or (depth_a!= depth_b):
+            parent_a, rand_node_a = nodes_a[np.random.choice(len(nodes_a))]
+            parent_b, rand_node_b = nodes_b[np.random.choice(len(nodes_b))]
+        else:
+            break
     if parent_a:
         parent_a.children[parent_a.children.index(rand_node_a)] = rand_node_b
     else:
@@ -80,7 +91,7 @@ def mutate_program(a):
         a = new_node
     return a
 
-
+# BFS to generate all lists of <parent, child>
 def program_to_list(root_node):
     nodes = []
     queue = [(None, root_node)]

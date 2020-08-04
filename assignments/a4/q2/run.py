@@ -12,12 +12,12 @@ from genetic_programming import simulation
 
 
 
-num_individuals = 1000
+num_individuals = 1024
 max_depth = 3
-generation_count = 1000
+generation_count = 200
 survivor_count = 50
 p_m = 0.05
-x = 0.5
+k = 7
 
 
 def init_population(num_individuals, max_depth):
@@ -33,7 +33,7 @@ best_pre_gen, best_individual = simulation(
         num_individuals=num_individuals,
         max_depth=max_depth),
     parent_selection=parent_selection(
-        x=x
+        k=k
     ),
     variation=variation(
         p_m=p_m),

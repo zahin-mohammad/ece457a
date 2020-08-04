@@ -30,11 +30,12 @@ class Individual:
 
 if __name__ == "__main__":
     i = Individual(max_depth=4)
+    print(i.program.to_list())
     t = i.program.to_tree_node()
-
+    print(f"depth: {i.program.get_max_depth()}")
     ts = TreeStyle()
     ts.show_leaf_name = False
     ts.show_scale = False
     ts.rotation = 90
     t.render("example.png", tree_style=ts)
-    # t.show(tree_style=ts)
+    t.show(tree_style=ts)

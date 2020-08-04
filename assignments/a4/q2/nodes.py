@@ -1,8 +1,38 @@
-from node_interface import Node
 import random
 import numpy as np
 from six_multiplexer import VARS
 from ete3 import Tree, TreeStyle, TextFace, TreeNode
+
+class Node:
+    def __init__(self, children, depth, max_depth, fullmode, function_type):
+        self.children, self.depth, self.max_depth, self.full_mode, self.function_type = children, depth, max_depth, fullmode, function_type
+    
+    def get_max_depth(self):
+        return 1 + max(child.get_max_depth() for child in self.children)
+
+    def to_tree_node(self):
+        t = Tree(f"{self.function_type};", format=1)
+        for child in self.children:
+            t.add_child(child.to_tree_node())
+        tf = TextFace(f"{self.function_type}")
+        tf.rotation = -90
+        t.add_face(tf, column=1, position="branch-top")
+        return t
+
+    def evaluate(self):
+        assert False, "Not Implemented"
+
+    def to_string(self):
+        assert False, "Not Implemented"
+
+    def copy(self):
+        assert False, "Not Implemented"
+    
+    def to_list(self):
+        nodes = [self.copy()]
+        for child in self.children:
+            nodes.extend(child.to_list())
+        return nodes
 
 
 class And(Node):
@@ -12,26 +42,17 @@ class And(Node):
                  full_mode,
                  children=None,
                  debug=False):
-        super().__init__(children, depth, max_depth, full_mode)
+        super().__init__(children, depth, max_depth, full_mode, function_type = And.__name__)
 
         if self.children is None:
             self.children = random_children(
-                2, depth, max_depth, full_mode) if depth < max_depth else [Terminal(depth+1, max_depth, full_mode) for i in range(2)]
+                2, depth+1, max_depth, full_mode) if depth < max_depth else [Terminal(depth+1, max_depth, full_mode) for i in range(2)]
 
     def evaluate(self, inputs):
         return self.children[0].evaluate(inputs) and self.children[1].evaluate(inputs)
 
     def to_string(self):
         return f"({self.children[0].to_string()} AND {self.children[1].to_string()})"
-
-    def to_tree_node(self):
-        t = Tree("AND;", format=1)
-        for child in self.children:
-            t.add_child(child.to_tree_node())
-        tf = TextFace("AND")
-        tf.rotation = -90
-        t.add_face(tf, column=1, position="branch-top")
-        return t
 
     def copy(self):
         return And(
@@ -46,28 +67,18 @@ class Or(Node):
                  depth,
                  max_depth,
                  full_mode,
-                 children=None,
-                 debug=False):
-        super().__init__(children, depth, max_depth, full_mode)
+                 children=None):
+        super().__init__(children, depth, max_depth, full_mode, function_type = Or.__name__)
 
         if self.children is None:
             self.children = random_children(
-                2, depth, max_depth, full_mode) if depth < max_depth else [Terminal(depth+1, max_depth, full_mode) for i in range(2)]
+                2, depth+1, max_depth, full_mode) if depth < max_depth else [Terminal(depth+1, max_depth, full_mode) for i in range(2)]
 
     def evaluate(self, inputs):
         return self.children[0].evaluate(inputs) or self.children[1].evaluate(inputs)
 
     def to_string(self):
         return f"({self.children[0].to_string()} OR {self.children[1].to_string()})"
-
-    def to_tree_node(self):
-        t = Tree("OR;", format=1)
-        for child in self.children:
-            t.add_child(child.to_tree_node())
-        tf = TextFace("OR")
-        tf.rotation = -90
-        t.add_face(tf, column=1, position="branch-top")
-        return t
 
     def copy(self):
         return Or(
@@ -82,13 +93,12 @@ class If(Node):
                  depth,
                  max_depth,
                  full_mode,
-                 children=None,
-                 debug=False):
-        super().__init__(children, depth, max_depth, full_mode)
+                 children=None):
+        super().__init__(children, depth, max_depth, full_mode, function_type = If.__name__)
 
         if self.children is None:
             self.children = random_children(
-                3, depth, max_depth, full_mode) if depth < max_depth else [Terminal(depth+1, max_depth, full_mode) for i in range(3)]
+                3, depth+1, max_depth, full_mode) if depth < max_depth else [Terminal(depth+1, max_depth, full_mode) for i in range(3)]
 
     def evaluate(self, inputs):
         return self.children[1].evaluate(inputs) if self.children[0].evaluate(inputs) else self.children[2].evaluate(inputs)
@@ -98,8 +108,6 @@ class If(Node):
 
     def to_tree_node(self):
         t = Tree("IF;", format=1)
-        # for child in self.children:
-        #     t.add_child(child.to_tree_node())
         t.add_child(self.children[1].to_tree_node())
         t.add_child(self.children[0].to_tree_node())
         t.add_child(self.children[2].to_tree_node())
@@ -121,28 +129,18 @@ class Not(Node):
                  depth,
                  max_depth,
                  full_mode,
-                 children=None,
-                 debug=False):
-        super().__init__(children, depth, max_depth, full_mode)
+                 children=None):
+        super().__init__(children, depth, max_depth, full_mode, function_type = Not.__name__)
 
         if self.children is None:
             self.children = random_children(
-                1, depth, max_depth, full_mode) if depth < max_depth else [Terminal(depth+1, max_depth, full_mode)]
+                1, depth+1, max_depth, full_mode) if depth < max_depth else [Terminal(depth+1, max_depth, full_mode)]
 
     def evaluate(self, inputs):
         return not self.children[0].evaluate(inputs)
 
     def to_string(self):
         return f"(NOT {self.children[0].to_string()})"
-
-    def to_tree_node(self):
-        t = Tree("NOT;", format=1)
-        for child in self.children:
-            t.add_child(child.to_tree_node())
-        tf = TextFace("NOT")
-        tf.rotation = -90
-        t.add_face(tf, column=1, position="branch-top")
-        return t
 
     def copy(self):
         return Not(
@@ -157,11 +155,13 @@ class Terminal(Node):
                  depth,
                  max_depth,
                  full_mode,
-                 children=[None],
-                 debug=False):
-        super().__init__(children, depth, max_depth, full_mode)
+                 children=[None]):
+        super().__init__(children, depth, max_depth, full_mode, function_type = Terminal.__name__)
 
         self.children = [np.random.choice(VARS)]
+
+    def get_max_depth(self):
+        return 0
 
     def evaluate(self, inputs):
         return bool(inputs[self.children[0]])
@@ -175,6 +175,9 @@ class Terminal(Node):
         tf.rotation = -90
         t.add_face(tf, column=1, position="branch-bottom")
         return t
+    
+    def to_list(self):
+        return [self.copy()]
 
     def copy(self):
         return Terminal(

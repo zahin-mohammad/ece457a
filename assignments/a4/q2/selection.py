@@ -2,41 +2,19 @@ import numpy as np
 import heapq
 
 
-def parent_selection(x):
-    # TODO: CHANGE THIS
-    def f(population):
-        gen_size = len(population)
-        population = list(
-            filter(lambda program: program.fitness != 0, population))
-        x_count = min(int(np.round(x * len(population))), len(population))
-
-        population = sorted(
-            population, key=lambda program: program.fitness, reverse=True)
-
-        group1 = population[:x_count]
-        group2 = population[x_count:]
-
-        group1_total_fitness = sum([program.fitness for program in group1])
-        group2_total_fitness = sum([program.fitness for program in group2])
-
-        group1_pick_probs = [program.fitness /
-                             group1_total_fitness for program in group1]
-
-        group2_pick_probs = [program.fitness /
-                             group2_total_fitness for program in group2]
-
+def parent_selection(k):
+    def f(p):
+        pop_size = len(p)
+        
         parents = []
+        pop_size = len(p)
+        population = [i.copy() for i in p if i.fitness != 0]
 
-        # 80% from best x% of population
-        # 20% from best (100-x)% of population
-        for _ in range(gen_size):
-            # TODO: Change to explicit 80/20 split instead of probability
-            group, pick_probs = [(group1, group1_pick_probs), (group2,
-                                                               group2_pick_probs)][np.random.choice([0, 1], p=[0.8, 0.2])]
-
-            parents.append(np.random.choice(group, p=pick_probs))
-
+        while len(parents) < pop_size:
+            rand_individuals = list(np.random.choice(population, size=k))
+            parents.append(max(rand_individuals, key= lambda x: x.fitness))
         return parents
+
     return f
 
 
