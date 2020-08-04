@@ -1,7 +1,6 @@
 import numpy as np
 from individual import Individual
 from nodes import *
-from six_multiplexer import fitness
 
 
 def variation(p_m=0):

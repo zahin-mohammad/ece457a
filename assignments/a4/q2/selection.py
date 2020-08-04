@@ -3,18 +3,12 @@ import heapq
 
 
 def parent_selection(k):
-    def f(p):
-        pop_size = len(p)
-        
+    def f(population):
         parents = []
-        pop_size = len(p)
-        population = [i.copy() for i in p if i.fitness != 0]
-
-        while len(parents) < pop_size:
+        while len(parents) < len(population):
             rand_individuals = list(np.random.choice(population, size=k))
-            parents.append(max(rand_individuals, key= lambda x: x.fitness))
+            parents.append((max(rand_individuals, key= lambda x: x.fitness)).copy())
         return parents
-
     return f
 
 

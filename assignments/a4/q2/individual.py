@@ -1,6 +1,7 @@
 from nodes import *
 import numpy as np
-from six_multiplexer import fitness
+# from six_multiplexer import fitness
+from elevn_multiplexer import fitness
 from ete3 import Tree, TreeStyle, TextFace, TreeNode
 
 

@@ -4,17 +4,16 @@ np.random.seed(SEED)
 print(f"np SEED: {SEED}")
 from ete3 import TreeStyle
 import time
-from six_multiplexer import fitness
 from variation import variation
 from individual import Individual
 from selection import *
 from genetic_programming import simulation
-
+from plot import graph
 
 
 num_individuals = 1024
-max_depth = 3
-generation_count = 200
+max_depth = 4
+generation_count = 1024*2
 survivor_count = 50
 p_m = 0.05
 k = 7
@@ -27,7 +26,7 @@ def init_population(num_individuals, max_depth):
     return f
 
 
-best_pre_gen, best_individual = simulation(
+best_per_gen, best_individual = simulation(
     generation_count=generation_count,
     init_population=init_population(
         num_individuals=num_individuals,
@@ -49,4 +48,6 @@ ts = TreeStyle()
 ts.show_leaf_name = False
 ts.show_scale = False
 ts.rotation = 90
-t.render(f"example{best_individual.fitness}.png", tree_style=ts)
+t.render(f"./diagrams/fit{best_individual.fitness}.png", tree_style=ts)
+
+graph(title = "Best Fitness vs  Generation eleven multiplexer", data = [("Eleven Multiplexer", best_per_gen)])
