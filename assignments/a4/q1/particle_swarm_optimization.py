@@ -4,21 +4,21 @@ import numpy as np
 
 def simulation(
     termination_condition,
-    particles,
+    swarm,
     fitness_function,
     velocity_position_update,
 ):
     avg_fitness = []
     best_fitness = []
-    g_best = particles[0].position  # init
+    g_best = swarm[0].position  # init
 
     num_failures = 0
     num_success = 0
 
-    for i in termination_condition():
+    for _ in termination_condition():
         v_p_update = velocity_position_update(
             num_failures, num_success, g_best)
-        for particle in particles:
+        for particle in swarm:
             # update velocity, update position, update personal_best
             particle.fly(
                 velocity_position_update_fn=v_p_update,
@@ -38,7 +38,7 @@ def simulation(
         # Simulation data
         avg_fitness.append(np.average(
             np.array([fitness_function(p.position[0], p.position[1])
-                      for p in particles])
+                      for p in swarm])
         ))
 
         best_fitness.append(fitness_function(

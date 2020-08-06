@@ -1,3 +1,7 @@
+import numpy as np
+np.random.seed(1)
+
+import sys
 from particle_swarm_optimization import simulation
 from fitness import six_hump_camelback
 from particle import Particle
@@ -28,14 +32,14 @@ def termination_condition(iteration_count: int):
 def q_one_one():
     c1 = c2 = 2.05
 
-    particles = [
+    swarm = [
         Particle(x_y_range, x_y_range) for i in range(100)
     ]
-    velocity_position_fn = simple_velocity(c1, c2)
+    velocity_position_fn = simple_velocity(x_y_range, x_y_range, c1, c2)
 
     avg_fit, best_fit, g_best = simulation(
         termination_condition=termination_condition(iterations),
-        particles=particles,
+        swarm=swarm,
         fitness_function=six_hump_camelback,
         velocity_position_update=velocity_position_fn
     )
@@ -65,14 +69,14 @@ def q_one_two():
     c1 = c2 = 2.05
     w = 0.5
 
-    particles = [
+    swarm = [
         Particle(x_y_range, x_y_range) for i in range(100)
     ]
-    velocity_position_fn = inertia_velocity(w, c1, c2)
+    velocity_position_fn = inertia_velocity(x_y_range, x_y_range, w, c1, c2)
 
     avg_fit, best_fit, g_best = simulation(
         termination_condition=termination_condition(iterations),
-        particles=particles,
+        swarm=swarm,
         fitness_function=six_hump_camelback,
         velocity_position_update=velocity_position_fn
     )
@@ -103,14 +107,14 @@ def q_one_three():
     c1 = c2 = 2.05
     w = 0.5
 
-    particles = [
+    swarm = [
         Particle(x_y_range, x_y_range) for i in range(100)
     ]
-    velocity_position_fn = constriction_velocity(c1, c2)
+    velocity_position_fn = constriction_velocity(x_y_range, x_y_range, c1, c2)
 
     avg_fit, best_fit, g_best = simulation(
         termination_condition=termination_condition(iterations),
-        particles=particles,
+        swarm=swarm,
         fitness_function=six_hump_camelback,
         velocity_position_update=velocity_position_fn
     )
@@ -140,14 +144,14 @@ def q_one_four():
     c1 = c2 = 2.05
     w = 0.5
 
-    particles = [
+    swarm = [
         Particle(x_y_range, x_y_range) for i in range(100)
     ]
-    velocity_position_fn = guaranteed_convergence_velocity(w, c1, c2)
+    velocity_position_fn = guaranteed_convergence_velocity(x_y_range, x_y_range, w, c1, c2)
 
     avg_fit, best_fit, g_best = simulation(
         termination_condition=termination_condition(iterations),
-        particles=particles,
+        swarm=swarm,
         fitness_function=six_hump_camelback,
         velocity_position_update=velocity_position_fn
     )
@@ -166,7 +170,12 @@ def q_one_four():
     print(f"\t best fitness: {six_hump_camelback(g_best[0],g_best[1])}")
     print(f"\t best x,y: {g_best[0]} {g_best[1]}")
 
+algos = [q_one_one, q_one_two, q_one_three, q_one_four]
+# for fn in [q_one_one, q_one_two, q_one_three, q_one_four]:
+#     fn()
 
-for fn in [q_one_one, q_one_two, q_one_three, q_one_four]:
-    fn()
-# q_one_four()
+if len(sys.argv) > 1:
+    algos[int(sys.argv[1])]()
+else:
+    for fn in algos:
+        fn()
