@@ -30,13 +30,6 @@ def bound(x_range, y_range, v, pos):
 
     return v, pos
     
-    # new_pos = np.clip(pos, min_r, max_r)
-    # # return v, new_pos
-    # if new_pos[0] != pos[0] or new_pos[1] != pos[1]:
-    #     return 0, new_pos
-    # else:
-    #     return v, pos
-
 
 def inertia_velocity(
     x_range, y_range, w, c1, c2,
