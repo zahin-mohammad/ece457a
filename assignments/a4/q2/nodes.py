@@ -1,14 +1,19 @@
 import random
 import numpy as np
-# from six_multiplexer import VARS
-from elevn_multiplexer import VARS
+from six_multiplexer import VARS, FUNCTION_NAME
+# from elevn_multiplexer import VARS, FUNCTION_NAME
 from ete3 import Tree, TreeStyle, TextFace, TreeNode
 
 class Node:
     def __init__(self, children, depth, max_depth, fullmode, function_type):
         self.children, self.depth, self.max_depth, self.full_mode, self.function_type = children, depth, max_depth, fullmode, function_type
     
+    # Max from root
     def get_max_depth(self):
+        return max(child.get_max_depth() for child in self.children)
+    
+    # Max from where you call it from
+    def get_depth(self):
         return 1 + max(child.get_max_depth() for child in self.children)
 
     def to_tree_node(self):
@@ -19,6 +24,14 @@ class Node:
         tf.rotation = -90
         t.add_face(tf, column=1, position="branch-top")
         return t
+    
+    def to_diagram(self):
+        t = self.to_tree_node()
+        ts = TreeStyle()
+        ts.show_leaf_name = False
+        ts.show_scale = False
+        ts.rotation = 90
+        t.render(f"./diagrams/{FUNCTION_NAME}_{self.fitness}.png", tree_style=ts)
 
     def evaluate(self):
         assert False, "Not Implemented"
@@ -46,7 +59,7 @@ class And(Node):
         super().__init__(children, depth, max_depth, full_mode, function_type = And.__name__)
 
         if self.children is None:
-            self.children = random_children(2, depth+1, max_depth, full_mode)
+            self.children = random_children(2, depth, max_depth, full_mode)
 
     def evaluate(self, inputs):
         return self.children[0].evaluate(inputs) and self.children[1].evaluate(inputs)
@@ -71,7 +84,7 @@ class Or(Node):
         super().__init__(children, depth, max_depth, full_mode, function_type = Or.__name__)
 
         if self.children is None:
-            self.children = random_children(2, depth+1, max_depth, full_mode)
+            self.children = random_children(2, depth, max_depth, full_mode)
 
     def evaluate(self, inputs):
         return self.children[0].evaluate(inputs) or self.children[1].evaluate(inputs)
@@ -96,7 +109,7 @@ class If(Node):
         super().__init__(children, depth, max_depth, full_mode, function_type = If.__name__)
 
         if self.children is None:
-            self.children = random_children(3, depth+1, max_depth, full_mode) 
+            self.children = random_children(3,depth, max_depth, full_mode) 
 
     def evaluate(self, inputs):
         return self.children[1].evaluate(inputs) if self.children[0].evaluate(inputs) else self.children[2].evaluate(inputs)
@@ -131,7 +144,7 @@ class Not(Node):
         super().__init__(children, depth, max_depth, full_mode, function_type = Not.__name__)
 
         if self.children is None:
-            self.children = random_children(1, depth+1, max_depth, full_mode) 
+            self.children = random_children(1, depth, max_depth, full_mode) 
 
     def evaluate(self, inputs):
         return not self.children[0].evaluate(inputs)
@@ -158,6 +171,9 @@ class Terminal(Node):
         self.children = [np.random.choice(VARS)]
 
     def get_max_depth(self):
+        return self.depth
+
+    def get_depth(self):
         return 0
 
     def evaluate(self, inputs):
@@ -190,7 +206,7 @@ F = [And, Or, If, Not]
 
 def random_children(child_count, depth, max_depth, full_mode):
     if depth >= max_depth:
-        return [Terminal(depth, max_depth, full_mode) for i in range(child_count)]
+        return [Terminal(depth+1, max_depth, full_mode) for i in range(child_count)]
     function_set = F if full_mode else T_UNION_F
     return [node(depth+1, max_depth, full_mode) for node in np.random.choice(function_set, size=child_count)]
 

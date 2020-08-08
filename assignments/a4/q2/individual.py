@@ -1,8 +1,8 @@
 from nodes import *
 import numpy as np
-# from six_multiplexer import fitness
-from elevn_multiplexer import fitness
-from ete3 import Tree, TreeStyle, TextFace, TreeNode
+from six_multiplexer import fitness, FUNCTION_NAME
+# from elevn_multiplexer import fitness, FUNCTION_NAME
+from ete3 import TreeStyle
 
 
 class Individual:
@@ -27,6 +27,13 @@ class Individual:
             max_depth=self.max_depth,
             f=self.fitness
         )
+    def to_diagram(self):
+        t = self.program.to_tree_node()
+        ts = TreeStyle()
+        ts.show_leaf_name = False
+        ts.show_scale = False
+        ts.rotation = 90
+        t.render(f"./diagrams/{FUNCTION_NAME}_{self.fitness}.png", tree_style=ts)
 
 
 if __name__ == "__main__":

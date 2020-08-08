@@ -17,7 +17,7 @@ def variation(p_m=0):
                     individuals[i].program.copy())
                 intermediate_pool.append(Individual(
                     program=p.copy(),
-                    max_depth=individuals[i].max_depth))
+                    max_depth=p.max_depth))
             else:
                 # Wrap around if at end
                 a_index = i
@@ -29,10 +29,10 @@ def variation(p_m=0):
 
                 intermediate_pool.append(Individual(
                     program=p_a.copy(),
-                    max_depth=individuals[a_index].max_depth))
+                    max_depth=p_a.max_depth))
                 intermediate_pool.append(Individual(
                     program=p_b.copy(),
-                    max_depth=individuals[b_index].max_depth))
+                    max_depth=p_b.max_depth))
         return intermediate_pool
     return f
 
@@ -48,15 +48,17 @@ def crossover_program(a, b):
     
     parent_a, rand_node_a = nodes_a[np.random.choice(len(nodes_a))]
     parent_b, rand_node_b = nodes_b[np.random.choice(len(nodes_b))]
+    i = 0
     while True:
         # Do not want to replace root
-        depth_a = rand_node_a.get_max_depth()
-        depth_b = rand_node_b.get_max_depth()
+        depth_a = rand_node_a.get_depth()
+        depth_b = rand_node_b.get_depth()
         if (parent_a == None and depth_a != 0 ) \
             or (parent_b == None and depth_b != 0) \
             or (depth_a!= depth_b):
             parent_a, rand_node_a = nodes_a[np.random.choice(len(nodes_a))]
             parent_b, rand_node_b = nodes_b[np.random.choice(len(nodes_b))]
+            i+=1
         else:
             break
     if parent_a:
@@ -82,7 +84,7 @@ def mutate_program(a):
     new_node = random_node(
         depth=rand_node_a.depth,
         max_depth=rand_node_a.max_depth,
-        full_mode=rand_node_a.full_mode
+        full_mode= not rand_node_a.full_mode
     )
     if parent_a:
         parent_a.children[parent_a.children.index(rand_node_a)] = new_node
@@ -110,3 +112,7 @@ if __name__ == "__main__":
 
     p = [Individual(3) for i in range(10)]
     n_p = variation_fn(variation_fn(variation_fn(p)))
+    print(type(n_p))
+    for ind in n_p:
+        print(ind)
+        print(ind.program.max_depth())

@@ -29,8 +29,11 @@ def simulation(
             print(f'\tFitness:{best_per_generation[-1]}')
             print(f'\tTook: {time.time() - start} s')
             print(f'\tPop-size: {len(population)}')
+            max_depth_p = max(population, key= lambda x: x.program.get_max_depth())
             print(
-                f'\tMax Pop Depth: {max([i.program.get_max_depth() for i in population])}')
+                f'\tMax Pop Depth: {max_depth_p.program.get_max_depth()}')
+            # if max_depth_p.program.get_max_depth() > 3:
+            #     max_depth_p.to_diagram()            
 
         if best_per_generation[-1] == 1.0:
             break

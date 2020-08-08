@@ -24,4 +24,4 @@ def survivor_selection(population_size, survival_count):
 
 
 def best_of_generation(population):
-    return (max(population, key=lambda x: x.fitness))
+    return (max(population, key=lambda x: x.fitness)).copy()

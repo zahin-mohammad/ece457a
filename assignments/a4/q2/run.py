@@ -1,8 +1,8 @@
 import numpy as np
-SEED = np.random.randint(1000)
+# SEED = np.random.randint(1000)
+SEED = 1
 np.random.seed(SEED)
 print(f"np SEED: {SEED}")
-from ete3 import TreeStyle
 import time
 from variation import variation
 from individual import Individual
@@ -12,10 +12,10 @@ from plot import graph
 
 
 num_individuals = 1024
-max_depth = 4
+max_depth = 2
 generation_count = 1024*2
 survivor_count = 50
-p_m = 0.05
+p_m = 0.00
 k = 7
 
 
@@ -43,11 +43,5 @@ best_per_gen, best_individual = simulation(
     debug=True
 )
 
-t = best_individual.program.to_tree_node()
-ts = TreeStyle()
-ts.show_leaf_name = False
-ts.show_scale = False
-ts.rotation = 90
-t.render(f"./diagrams/fit{best_individual.fitness}.png", tree_style=ts)
-
+best_individual.to_diagram()
 graph(title = "Best Fitness vs  Generation eleven multiplexer", data = [("Eleven Multiplexer", best_per_gen)])
